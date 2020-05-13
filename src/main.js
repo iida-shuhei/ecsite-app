@@ -27,6 +27,25 @@ Vue.component("v-fa", FontAwesomeIcon);
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
 
+// firebaseのインポート
+import firebase from "firebase";
+Vue.config.productionTip = false;
+
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyDoI7rmwwDYHSOQEWudFlvw278hvm5ZxpQ",
+  authDomain: "pizza-house-3af98.firebaseapp.com",
+  databaseURL: "https://pizza-house-3af98.firebaseio.com",
+  projectId: "pizza-house-3af98",
+  storageBucket: "pizza-house-3af98.appspot.com",
+  messagingSenderId: "428873280108",
+  appId: "1:428873280108:web:2eff304a3e2f92428a8649",
+  measurementId: "G-C4Q2NDVBXX"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+
 new Vue({
   router,
   store,
