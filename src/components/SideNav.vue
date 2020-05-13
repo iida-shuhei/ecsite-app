@@ -8,7 +8,10 @@
         backdrop
         shadow
       >
-        <div class="px-4 mb-5 display-1 font-weight-medium">Menu</div>
+        <div class="px-4 mb-5 display-1 font-weight-medium title">
+          <h2>Menu</h2>
+        </div>
+        <v-divider></v-divider>
         <v-list class="py-0 bg-dark" dark tile>
           <v-list-item-group>
             <v-list-item>
@@ -75,3 +78,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+ .title {
+    position: absolute;
+    left: 50%;  /*親要素を起点に左から50%*/
+    transform: translateY(-50%) translateX(-50%); 
+ }
+</style>

@@ -2,6 +2,7 @@
 <v-app>
   <Header/>
   <SideNav/>
+  <router-view></router-view>
 </v-app>
 </template>
 
