@@ -1,15 +1,14 @@
 <template>
   <div>
-    <Item/>
+    <Topping/>
   </div>
 </template>
 
 <script>
-import Item from "@/components/Item.vue";
+import Topping from '@/components/Topping.vue'
 export default {
-  name: 'Home',
   components: {
-    Item
+    Topping
   }
 }
 </script>
