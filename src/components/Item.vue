@@ -10,7 +10,7 @@
                 :elevation="hover ? 16 : 2"
               >
                 <v-img
-                  :src="item.imagePath"
+                  :src="require('@/assets/images/' + item.imagePath)"
                 ></v-img>
                 
                 <v-card-text>

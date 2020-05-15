@@ -1,14 +1,14 @@
 <template>
   <div>
-    <ItemDetail/>
+    <Cart/>
   </div>
 </template>
 
 <script>
-import ItemDetail from '@/components/ItemDetail.vue'
+import Cart from "@/components/Cart.vue";
 export default {
   components: {
-    ItemDetail
+    Cart
   }
 }
 </script>

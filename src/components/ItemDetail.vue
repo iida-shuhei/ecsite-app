@@ -3,14 +3,13 @@
     <v-card
       class="mx-auto my-12"
       max-width="500"
-      v-for="item in itemList" :key="item.id"
     >
 
       <v-img
-        :src="require('@/assets/images/' + item.imagePath)"
+        :src="require('@/assets/images/' + item[0].imagePath)"
       ></v-img>
 
-      <v-card-title>{{ item.name }}</v-card-title>
+      <v-card-title>{{ item[0].name }}</v-card-title>
 
       <v-card-text>
         <v-row
@@ -18,17 +17,19 @@
           class="mx-0"
         >
         </v-row>
-        <div>{{ item.description }}</div>
+        <div>{{ item[0].description }}</div>
       </v-card-text>
 
       <v-card-text>
         <v-chip-group
           active-class="deep-purple accent-4 white--text"
-          column>
+          column
+          v-model="size"
+          >
 
-          <v-chip>{{ "[M]" + item.priceM.toLocaleString() + "円(税抜)" }}</v-chip>
+          <v-chip>{{ "[M]" + item[0].priceM.toLocaleString() + "円(税抜)" }}</v-chip>
 
-          <v-chip>{{ "[L]" + item.priceL.toLocaleString() + "円(税抜)" }}</v-chip>
+          <v-chip>{{ "[L]" + item[0].priceL.toLocaleString() + "円(税抜)" }}</v-chip>
 
         </v-chip-group>
       </v-card-text>
@@ -43,7 +44,7 @@
           <input
             :id="'topping.id' + i"
             type="checkbox"
-            :value="topping.name"
+            :value="topping.id"
             v-model="selected"
           >
           <label :for="'topping.id' + i">
@@ -60,11 +61,10 @@
           </v-col>
           <v-col cols="6">
             <v-select
-              v-model="e1"
-              :items="quantity"
+              v-model="quantity"
+              :items="quantities"
               menu-props="auto"
-              label="Select"
-              hide-details
+              label="1"
               single-line
             ></v-select>
           </v-col>
@@ -79,7 +79,7 @@
           <v-subheader>商品の金額</v-subheader>
         </v-col>
         <v-col cols="6">
-          1000円(税抜)
+          <v-subheader v-model="totalPrice">{{ totalPrice.toLocaleString() + "円(税抜)" }}</v-subheader>
         </v-col>
       </v-row>
       </v-container>
@@ -88,6 +88,7 @@
         <v-btn
           color="red"
           width="240"
+          @click="addItem()"
         >
         <span class="cart">商品をかごに追加</span>
         </v-btn>
@@ -109,9 +110,12 @@ export default {
   data() {
     return {
       toppingList:[],
-      itemList:[],
+      item:[],
       selected:[],
-      quantity: [1,2,3,4,5,6,7,8,9,10]
+      quantities: [1,2,3,4,5,6,7,8,9,10],
+      size:0,
+      quantity:"1",
+      cart:[]
     }
   },
   created() {
@@ -122,7 +126,37 @@ export default {
     var item = this.$store.state.itemList.filter(
       (elm) => elm.id === this.$route.params.itemId
     );
-    this.itemList = item
+    this.item = item
+  },
+  computed: {
+    totalPrice: function() {
+      var toppingCount = this.selected.length
+      var toppingPrice = null
+      if(this.size == 0) {
+        toppingPrice = toppingCount * 200
+        return  (this.item[0].priceM + toppingPrice) * this.quantity
+      } else if (this.size == 1) {
+        toppingPrice = toppingCount * 300
+        return (this.item[0].priceL + toppingPrice) * this.quantity
+      }
+      return this.sum
+    }
+  },
+  methods: {
+    addItem() {
+      this.$router.push(
+        { name: 'Cart',
+          params: {
+            name: this.item[0].name,
+            itemId: this.item[0].id,
+            quantity: this.quantity,
+            size: this.size,
+            toppings: this.selected,
+            imagePath: this.item[0].imagePath,
+            totalPrice: this.totalPrice,
+        } }
+      )
+    }
   }
 }
 </script>

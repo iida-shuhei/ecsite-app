@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    itemList:[]
+    itemList:[],
   },
   mutations: {
     itemList(state, itemList) {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import ItemDetail from '../views/ItemDetail.vue'
+import Cart from '../views/Cart.vue'
 
 Vue.use(VueRouter)
 
@@ -15,7 +16,12 @@ Vue.use(VueRouter)
     path: '/itemDetail/itemId=:itemId',
     name: 'ItemDetail',
     component: ItemDetail
-  }
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: Cart
+  },
 ]
 
 const router = new VueRouter({
