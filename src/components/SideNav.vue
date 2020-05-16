@@ -62,13 +62,18 @@
 
           </v-list-item-group>
         </v-list>
+        <Logout></Logout>
       </b-sidebar>
     </div>
   </div>
 </template>
 
 <script>
+import Logout from "@/components/Logout";
 export default {
+  components:{
+        Logout
+  },
   data() {
     return {
     }
