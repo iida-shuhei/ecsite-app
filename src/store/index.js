@@ -89,6 +89,9 @@ export default new Vuex.Store({
         imagePath: cart.imagePath,
         totalPrice: cart.totalPrice,
       })
+    },
+    setEmail(state,email){
+      state.loginUser.email = email
     }
   },
   actions: {
@@ -119,6 +122,9 @@ export default new Vuex.Store({
     },
     setCart({commit},cart) {
       commit("setCart", cart)
+    },
+    setEmail({commit},email){
+      commit("setEmail",email)
     }
   },
   modules: {},

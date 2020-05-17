@@ -5,6 +5,7 @@ import Top from '../views/Top.vue'
 import ItemDetail from '../views/ItemDetail.vue'
 import Cart from '../views/Cart.vue'
 import PurchaseForm from '../views/PurchaseForm.vue'
+import RegisterUser from '../views/RegisterUser.vue'
 
 Vue.use(VueRouter)
 
@@ -13,6 +14,13 @@ Vue.use(VueRouter)
       path:'/',
       name: 'Login',
       component: Login
+
+
+    },
+    {
+      path:'/registerUser',
+      name:'RegisterUser',
+      component:RegisterUser
 
 
     },

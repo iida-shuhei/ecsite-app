@@ -47,13 +47,13 @@ data(){
           })
           .then((response) => {
               console.log(response.data)
-            if (response.data.id == 0) {
-              this.setLoginUser(response.data);
+            if (!(response.data.id)) {
+              this.$store.dispatch("setEmail",firebase.auth().currentUser.email)
               this.$router.push("/registerUser");
-            } else if (response.data.id != 0) {
+            } else if (response.data.id) {
               this.setLoginUser(response.data);
               this.loginStatus();
-              this.$router.push("/");
+              this.$router.push("/top");
             } else{
                 this.deleteLoginUser();
             }

@@ -14,6 +14,14 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 
+//ElementUIのインポート
+import ElementUI from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/ja'
+import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/display.css'
+
+Vue.use(ElementUI, { locale })
+
 /** FontAwesomeのインポート */
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -28,6 +36,7 @@ Vue.component("v-fa", FontAwesomeIcon);
 // vuelidate（バリデーション）インポート
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
+
 
 // firebaseのインポート
 import firebase from "firebase";
