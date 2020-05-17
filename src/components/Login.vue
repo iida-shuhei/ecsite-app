@@ -23,37 +23,29 @@ data(){
 
   }
 },
-
   methods: {
     ...mapActions(["login", "setLoginUser", "loginStatus",'deleteLoginUser','setFirebaseUser']),
-    
   },
   components:{
     Loading
-
   },
-
   created() {
-      
     firebase.auth().onAuthStateChanged((user) => {
       this.loading = false;
-      
       if (user) {
-          
         this.setFirebaseUser(user);
         axios
           .post("http://localhost:8080/login/findAllByMail", {
             email: firebase.auth().currentUser.email,
           })
           .then((response) => {
-              console.log(response.data)
             if (response.data.id == 0) {
               this.setLoginUser(response.data);
               this.$router.push("/registerUser");
             } else if (response.data.id != 0) {
               this.setLoginUser(response.data);
               this.loginStatus();
-              this.$router.push("/");
+              this.$router.push("/top");
             } else{
                 this.deleteLoginUser();
             }

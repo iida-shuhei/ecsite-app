@@ -9,7 +9,7 @@
 import Cart from "@/components/Cart.vue";
 export default {
   components: {
-    Cart
+    Cart,
   },
   methods: {
     toProcedure() {
