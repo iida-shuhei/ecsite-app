@@ -7,7 +7,6 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    //パスワード意外を格納
     loginUser: {
       id: "",
       name: "",
@@ -42,9 +41,24 @@ export default new Vuex.Store({
         },
       },
     },
-    itemList: [],
     firebaseUser: null,
     loginStatus: false,
+    itemList:{
+      id: '',
+      name: '',
+      description: '',
+      priceM: '',
+      priceL: '',
+      imagePath: '',
+      deleted: '',
+      toppingList: {
+        id: '',
+        name: '',
+        priceM: '',
+        priceL: ''
+      }
+    },
+    cart: [],
   },
   mutations: {
     setLoginUser(state, user) {
@@ -56,8 +70,7 @@ export default new Vuex.Store({
     deleteLoginUser(state) {
       state.login_user = null;
     },
-
-    itemList(state, itemList) {
+    setItemList(state, itemList) {
       state.itemList = itemList;
     },
     setFirebaseUser(state, user) {
@@ -65,6 +78,17 @@ export default new Vuex.Store({
     },
     changeLoginStatus(state){
       state.loginStatus = false;
+    },
+    setCart(state, cart) {
+      state.cart.push({
+        name: cart.name,
+        itemId: cart.itemId,
+        quantity: cart.quantity,
+        size: cart.size,
+        toppingList: cart.toppingList,
+        imagePath: cart.imagePath,
+        totalPrice: cart.totalPrice,
+      })
     }
   },
   actions: {
@@ -78,14 +102,12 @@ export default new Vuex.Store({
     deleteLoginUser({ commit }) {
       commit("deleteLoginUser");
     },
-
     setLoginUser({ commit }, user) {
       commit("setLoginUser", user);
     },
     loginStatus({ commit }) {
       commit("loginStatus");
     },
-
     setItemList({ commit }, itemList) {
       commit("itemList", itemList);
     },
@@ -95,6 +117,9 @@ export default new Vuex.Store({
     changeLoginStatus({ commit }) {
       commit("changeLoginStatus");
     },
+    setCart({commit},cart) {
+      commit("setCart", cart)
+    }
   },
   modules: {},
   getters:{

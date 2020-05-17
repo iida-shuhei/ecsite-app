@@ -6,12 +6,12 @@
       v-for="item in items" :key="item.id"
     >
       <v-img
-        :src="require('@/assets/images/' + item.item.imagePath)"
+        :src="require('@/assets/images/' + item.imagePath)"
         height="200px"
       ></v-img>
 
       <v-card-title>
-        {{ item.item.name }}
+        {{ item.name }}
       </v-card-title>
 
       <v-spacer></v-spacer>
@@ -20,9 +20,9 @@
       <v-row>
       <v-col cols="12">
         <v-card-title>
-          サイズ : {{ item.item.size }}
-          数量 : {{ item.item.quantity + "個" }}
-          合計: {{ item.item.totalPrice.toLocaleString() + "円"  }}
+          サイズ : {{ item.size }}<br>
+          数量 : {{ item.quantity + "個" }}<br>
+          合計: {{ item.totalPrice.toLocaleString() + "円"  }}
         </v-card-title>
       </v-col>
       </v-row>
@@ -33,6 +33,7 @@
         <v-btn
           color="purple"
           text
+          @click="deleteItem(item)"
         >
           削除
         </v-btn>
@@ -52,12 +53,15 @@
           <v-divider></v-divider>
 
           <v-card-subtitle>トッピング</v-card-subtitle>
-          <v-card-text v-for="topping in item.item.toppings" :key="topping.toppingId">
-            {{topping}}
+          <v-card-text v-for="(topping, i) in item.toppingList" :key="i">
+            {{ topping.name }}
           </v-card-text>
         </div>
       </v-expand-transition>
     </v-card>
+    {{ totalWithoutTax.toLocaleString() + "円(税抜)" }}
+    {{ totalTax.toLocaleString() + "円(消費税)" }}
+    {{ totalPrice.toLocaleString() + "円(税込)" }}
   </div>
 </template>
 
@@ -65,24 +69,47 @@
 export default {
   data() {
     return {
-      items:[],
-      show:false
+      items:{},
+      show:false,
     }
   },
   created() {
-    console.log(this.items)
-    this.items.push(
-        { item : {
-          name: this.$route.params.name,
-          itemId: this.$route.params.itemId,
-          quantity: this.$route.params.quantity,
-          size: this.$route.params.size,
-          toppings: this.$route.params.toppings,
-          imagePath: this.$route.params.imagePath,
-          totalPrice: this.$route.params.totalPrice
-        }
+    this.items = this.$store.state.cart
+  },
+  computed: {
+    totalWithoutTax : function() {
+      var totalWithoutTax = 0
+      for( var num in this.items ) {
+        totalWithoutTax += this.items[num].totalPrice
       }
-    )
-  }
+      return totalWithoutTax
+    },
+    totalTax : function() {
+      var totalWithoutTax = 0
+      for( var num in this.items ) {
+        totalWithoutTax += this.items[num].totalPrice
+      }
+      return totalWithoutTax * 0.1
+    },
+    totalPrice : function() {
+      var totalWithoutTax = 0
+      for( var num in this.items ) {
+        totalWithoutTax += this.items[num].totalPrice
+      }
+      return totalWithoutTax + (totalWithoutTax * 0.1)
+    }
+  },
+  methods : {
+    toProcedure() {
+      this.$router.push( 
+        { name : 'PurchaseForm' , params :  { totalPrice : this.totalPrice }
+      })
+    },
+    deleteItem(item) {
+      var items = this.items
+      var index = items.indexOf(item)
+      items.splice(index,1)
+    }
+  },
 }
 </script>

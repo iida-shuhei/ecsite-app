@@ -29,7 +29,7 @@
                 <v-icon> mdi mdi-cart-outline</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title class="text-white"
+                <v-list-item-title class="text-white" @click="toPage('/cart')"
                   >買い物かご</v-list-item-title
                 >
               </v-list-item-content>
@@ -81,6 +81,11 @@ export default {
   mounted() {
     window.addEventListener("resize", this.abjustLogout);
   },
+  methods: {
+    toPage(path) {
+      this.$router.push(path);
+    },
+  }
 };
 </script>
 
