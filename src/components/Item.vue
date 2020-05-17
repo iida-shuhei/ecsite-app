@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-      <v-row cols="4">
+  <v-container class="box">
+      <v-row>
         <v-col v-for="item in this.$store.state.itemList" :key="item.id">
           <router-link :to="{ name: 'ItemDetail', params : { itemId: item.id }}" class="link">
             <v-hover v-slot:default="{ hover }">

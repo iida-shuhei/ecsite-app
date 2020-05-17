@@ -57,13 +57,31 @@
       <v-row justify="center">
         <v-col cols="8">
           <Date v-model="date"/>
-          <span>配達希望日付： {{ date }}</span>
+          <span>配達希望日付 : {{ date }}</span>
+
+          <div>配達希望時間 : 
+          <vue-timepicker 
+          hide-disabled-items 
+          :hour-range="[[11, 22]]" 
+          :minute-interval="30" 
+          v-model="deliveryTime"
+          placeholder="配達希望時間"
+          hour-label="時"
+          minute-label="分"
+          ></vue-timepicker></div>
+
         </v-col>
       </v-row>
     </v-content>
-          <!-- <vue-ctk-date-time-picker label="時間のみ" v-model="value" format="hh:mm a" formatted="hh:mm a" only-time></vue-ctk-date-time-picker>
-          <span>時間: {{ value }}</span> -->
 
+    <v-container fluid>
+    <v-radio-group v-model="paymentMethod">
+      <v-radio label="現金" value="1"></v-radio>
+      <v-radio label="クレジットカード" value="2"></v-radio>
+    </v-radio-group>
+  </v-container>
+
+         
       <b-button
         :disabled="!contactFormValidation.valid"
         @click="purchase()"
@@ -82,6 +100,8 @@
 </template>
 
 <script>
+import VueTimepicker from 'vue2-timepicker'
+import 'vue2-timepicker/dist/VueTimepicker.css'
 import CalcTotal from "@/components/CalcTotal.vue";
 import Date from '@/components/Date.vue'
 import { mapActions } from "vuex";
@@ -89,7 +109,8 @@ import axios from "axios";
 export default {
   components : {
     Date,
-    CalcTotal
+    CalcTotal,
+    VueTimepicker
   },
     data: () => ({
         name: '',
@@ -101,6 +122,8 @@ export default {
         orderItemList: [],
         orderToppingList:"",
         date: null,
+        deliveryTime: '',
+        paymentMethod: "1",
         contactFormValidation: {
         valid: false,
         nameRules: [v => !!v || 'タイトルは必須項目です'],
@@ -166,13 +189,16 @@ export default {
                     toppingId: this.orderItemList[i].orderToppingList[n]
                   }]
               }],
+                userId: this.$store.state.loginUser.id,
                 destinationName: this.name,
                 destinationEmail: this.email,
                 destinationZipcode: this.zipcode,
                 destinationAddress: this.address,
                 destinationTel: this.telephone,
                 totalPrice: this.totalPrice,
-                deliveryDate: this.date
+                deliveryDate: this.date,
+                deliveryTime: this.deliveryTime,
+                paymentMethod: this.paymentMethod
               })
             .then((response) => {
               console.log(response.data)
@@ -202,6 +228,8 @@ export default {
       }
     },
     created() {
+
+      console.log(this.deliveryTime)
 
       //税抜、消費税、税込を計算する
       var totalWithoutTax = 0
