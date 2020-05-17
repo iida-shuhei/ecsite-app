@@ -109,7 +109,7 @@ export default new Vuex.Store({
       commit("loginStatus");
     },
     setItemList({ commit }, itemList) {
-      commit("itemList", itemList);
+      commit("setItemList", itemList);
     },
     setFirebaseUser({ commit }, user) {
       commit("setFirebaseUser", user);
