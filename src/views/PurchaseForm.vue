@@ -12,7 +12,7 @@ import Cart from '@/components/Cart.vue'
 export default {
   components: {
     PurchaseInputForm,
-    Cart
+    Cart,
   },
 }
 </script>

@@ -23,23 +23,16 @@ data(){
 
   }
 },
-
   methods: {
     ...mapActions(["login", "setLoginUser", "loginStatus",'deleteLoginUser','setFirebaseUser']),
-    
   },
   components:{
     Loading
-
   },
-
   created() {
-      
     firebase.auth().onAuthStateChanged((user) => {
       this.loading = false;
-      
       if (user) {
-          
         this.setFirebaseUser(user);
         axios
           .post("http://localhost:8080/login/findAllByMail", {

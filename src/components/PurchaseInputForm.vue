@@ -1,5 +1,7 @@
 <template>
   <div>
+    <b-container class="container">
+
     <v-form ref="form" class="form" v-model="contactFormValidation.valid" lazy-validation>
       <v-text-field
         v-model="name"
@@ -15,6 +17,7 @@
         required
       ></v-text-field>
         
+      <div class="d-flex flex-row align-baseline">
       <v-text-field
         v-model="zipcode"
         :rules="contactFormValidation.zipcodeRules"
@@ -22,6 +25,7 @@
         required
       ></v-text-field>
       <b-button @click="search()">検索</b-button>
+      </div>
         
       <v-text-field
         v-model="address"
@@ -37,16 +41,6 @@
         required
       ></v-text-field>
         
-        <b-button
-          :disabled="!contactFormValidation.valid"
-          @click="purchase()"
-          block
-          large
-          variant="dark"
-          class="mt-4 font-weight-bold"
-        >購入
-        </b-button>
-
         <v-snackbar
           v-model="snackBar.show"
           :color="snackBar.color"
@@ -57,13 +51,46 @@
           {{snackBar.message}}
         </v-snackbar>
       </v-form>
+    </b-container>
+
+    <v-content>
+      <v-row justify="center">
+        <v-col cols="8">
+          <Date v-model="date"/>
+          <span>配達希望日付： {{ date }}</span>
+        </v-col>
+      </v-row>
+    </v-content>
+          <!-- <vue-ctk-date-time-picker label="時間のみ" v-model="value" format="hh:mm a" formatted="hh:mm a" only-time></vue-ctk-date-time-picker>
+          <span>時間: {{ value }}</span> -->
+
+      <b-button
+        :disabled="!contactFormValidation.valid"
+        @click="purchase()"
+        block
+        large
+        variant="dark"
+        class="mt-4 font-weight-bold"
+        >購入
+      </b-button>
+
+      <CalcTotal></CalcTotal>
+
+
+
     </div>
 </template>
 
 <script>
+import CalcTotal from "@/components/CalcTotal.vue";
+import Date from '@/components/Date.vue'
 import { mapActions } from "vuex";
 import axios from "axios";
 export default {
+  components : {
+    Date,
+    CalcTotal
+  },
     data: () => ({
         name: '',
         email: '',
@@ -72,7 +99,8 @@ export default {
         telephone: '',
         totalPrice: 0,
         orderItemList: [],
-        orderToppingList:[],
+        orderToppingList:"",
+        date: null,
         contactFormValidation: {
         valid: false,
         nameRules: [v => !!v || 'タイトルは必須項目です'],
@@ -116,34 +144,35 @@ export default {
               orderItem.quantity = this.$store.state.cart[num].quantity
               orderItem.size = this.$store.state.cart[num].size
 
-
               for(var number in this.$store.state.cart[num].toppingList) {
                 var toppingId = this.$store.state.cart[num].toppingList[number].id
                 orderItem.orderToppingList.push(toppingId)
               }
 
               this.orderItemList.push(orderItem)
+
             }
 
             for(var i in this.orderItemList) {
 
-              console.log(this.orderItemList[i].orderToppingList)
+            for(var n in this.orderItemList[i].orderToppingList) {
 
             axios.post("http://localhost:8080/purchase", {
               orderItemList: [{
                 itemId: this.orderItemList[i].itemId,
                 quantity: this.orderItemList[i].quantity,
                 size: this.orderItemList[i].size,
-                  orderToppingList: {
-                    toppingId:this.orderItemList[i].orderToppingList
-                  }
+                  orderToppingList: [{
+                    toppingId: this.orderItemList[i].orderToppingList[n]
+                  }]
               }],
                 destinationName: this.name,
                 destinationEmail: this.email,
                 destinationZipcode: this.zipcode,
                 destinationAddress: this.address,
                 destinationTel: this.telephone,
-                totalPrice: this.totalPrice
+                totalPrice: this.totalPrice,
+                deliveryDate: this.date
               })
             .then((response) => {
               console.log(response.data)
@@ -160,7 +189,7 @@ export default {
               )
               console.log(err)
             })
-          }
+          }}
         }
       },
       showSnackBar: function (color, message) {
@@ -192,3 +221,10 @@ export default {
     },
   }
 </script>
+
+<style scoped>
+  .container {
+    border: dotted 2px black;
+    width: 500px;
+  }
+</style>
