@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import ItemDetail from '../views/ItemDetail.vue'
 import Cart from '../views/Cart.vue'
+import PurchaseForm from '../views/PurchaseForm.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ Vue.use(VueRouter)
     path: '/cart',
     name: 'Cart',
     component: Cart
+  },
+  {
+    path: '/purchaseForm',
+    name: 'PurchaseForm',
+    component: PurchaseForm
   },
 ]
 

@@ -3,13 +3,14 @@
     <v-card
       class="mx-auto my-12"
       max-width="500"
+      v-for="item in item" :key="item.id"
     >
 
       <v-img
-        :src="require('@/assets/images/' + item[0].imagePath)"
+        :src="require('@/assets/images/' + item.imagePath)"
       ></v-img>
 
-      <v-card-title>{{ item[0].name }}</v-card-title>
+      <v-card-title>{{ item.name }}</v-card-title>
 
       <v-card-text>
         <v-row
@@ -17,7 +18,7 @@
           class="mx-0"
         >
         </v-row>
-        <div>{{ item[0].description }}</div>
+        <div>{{ item.description }}</div>
       </v-card-text>
 
       <v-card-text>
@@ -27,9 +28,9 @@
           v-model="size"
           >
 
-          <v-chip>{{ "[M]" + item[0].priceM.toLocaleString() + "円(税抜)" }}</v-chip>
+          <v-chip value="M">{{ "[M]" + item.priceM.toLocaleString() + "円(税抜)" }}</v-chip>
 
-          <v-chip>{{ "[L]" + item[0].priceL.toLocaleString() + "円(税抜)" }}</v-chip>
+          <v-chip value="L">{{ "[L]" + item.priceL.toLocaleString() + "円(税抜)" }}</v-chip>
 
         </v-chip-group>
       </v-card-text>
@@ -40,16 +41,18 @@
       
       <v-container fluid>
       <v-row align="center">
-        <v-col cols="6" v-for="(topping, i) in toppingList" :key="topping.id">
-          <input
-            :id="'topping.id' + i"
-            type="checkbox"
-            :value="topping.id"
-            v-model="selected"
-          >
-          <label :for="'topping.id' + i">
-            <v-card-text class="name">{{topping.name}}</v-card-text>
-          </label>
+        <v-col cols="6">
+            <v-subheader>トッピングを選択</v-subheader>
+        </v-col>
+        <v-col cols="12" sm="6">
+        <v-select
+          v-model="selected"
+          item-text="name"
+          item-value="id"
+          :items="item.toppingList"
+          multiple
+          return-object
+        />
         </v-col>
       </v-row>
       </v-container>
@@ -79,7 +82,7 @@
           <v-subheader>商品の金額</v-subheader>
         </v-col>
         <v-col cols="6">
-          <v-subheader v-model="totalPrice">{{ totalPrice.toLocaleString() + "円(税抜)" }}</v-subheader>
+          <v-card-title v-model="totalPrice">{{ totalPrice.toLocaleString() + "円(税抜)" }}</v-card-title>
         </v-col>
       </v-row>
       </v-container>
@@ -105,7 +108,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -113,49 +116,42 @@ export default {
       item:[],
       selected:[],
       quantities: [1,2,3,4,5,6,7,8,9,10],
-      size:0,
+      size:"M",
       quantity:"1",
       cart:[]
     }
   },
   created() {
-    axios.get("http://localhost:8080/topping/show")
-      .then((response) => {
-        this.toppingList = response.data
-      });
-    var item = this.$store.state.itemList.filter(
-      (elm) => elm.id === this.$route.params.itemId
-    );
-    this.item = item
+    this.item = this.$store.state.itemList.filter(
+      (elm) => elm.id === this.$route.params.itemId);
   },
   computed: {
     totalPrice: function() {
       var toppingCount = this.selected.length
       var toppingPrice = null
-      if(this.size == 0) {
+      if(this.size == 'M') {
         toppingPrice = toppingCount * 200
         return  (this.item[0].priceM + toppingPrice) * this.quantity
-      } else if (this.size == 1) {
+      } else if (this.size == 'L') {
         toppingPrice = toppingCount * 300
         return (this.item[0].priceL + toppingPrice) * this.quantity
       }
-      return this.sum
+      return 0
     }
   },
   methods: {
+    ...mapActions(['setCart']),
     addItem() {
-      this.$router.push(
-        { name: 'Cart',
-          params: {
-            name: this.item[0].name,
-            itemId: this.item[0].id,
-            quantity: this.quantity,
-            size: this.size,
-            toppings: this.selected,
-            imagePath: this.item[0].imagePath,
-            totalPrice: this.totalPrice,
-        } }
-      )
+      this.$router.push('/cart')
+      this.setCart({
+          name: this.item[0].name,
+          itemId: this.item[0].id,
+          quantity: this.quantity,
+          size: this.size,
+          toppingList: this.selected,
+          imagePath: this.item[0].imagePath,
+          totalPrice: this.totalPrice,
+      })
     }
   }
 }
