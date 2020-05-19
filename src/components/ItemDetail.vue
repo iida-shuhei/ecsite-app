@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { mapActions } from "vuex";
 export default {
   data() {
@@ -118,7 +119,8 @@ export default {
       quantities: [1,2,3,4,5,6,7,8,9,10],
       size:"M",
       quantity:"1",
-      cart:[]
+      cart:[],
+      orderTopping: []
     }
   },
   created() {
@@ -141,8 +143,23 @@ export default {
   },
   methods: {
     ...mapActions(['setCart']),
+
     addItem() {
-      this.$router.push('/cart')
+      
+      var orderToppingId = []
+
+      for(var num in this.selected) {
+        orderToppingId.push(this.selected[num].id)
+      }
+
+      this.orderTopping = orderToppingId
+
+      axios.post('http://localhost:8080/add', {
+        itemId: this.item[0].id,
+        quantity: this.quantity,
+        size: this.size,
+        orderTopping: this.orderTopping,
+      })
       this.setCart({
           name: this.item[0].name,
           itemId: this.item[0].id,
