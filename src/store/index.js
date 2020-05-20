@@ -58,7 +58,7 @@ export default new Vuex.Store({
         priceL: ''
       }
     },
-    cart: [],
+    shoppingCart:[]
   },
   mutations: {
     setLoginUser(state, user) {
@@ -78,17 +78,6 @@ export default new Vuex.Store({
     },
     changeLoginStatus(state){
       state.loginStatus = false;
-    },
-    setCart(state, cart) {
-      state.cart.push({
-        name: cart.name,
-        itemId: cart.itemId,
-        quantity: cart.quantity,
-        size: cart.size,
-        toppingList: cart.toppingList,
-        imagePath: cart.imagePath,
-        totalPrice: cart.totalPrice,
-      })
     },
     setEmail(state,email){
       state.loginUser.email = email
@@ -120,9 +109,6 @@ export default new Vuex.Store({
     changeLoginStatus({ commit }) {
       commit("changeLoginStatus");
     },
-    setCart({commit},cart) {
-      commit("setCart", cart)
-    },
     setEmail({commit},email){
       commit("setEmail",email)
     }
@@ -130,7 +116,6 @@ export default new Vuex.Store({
   modules: {},
   getters:{
     userName: (state) => (state.loginUser ? state.loginUser.name : ""),
-    photoURL: (state) =>
-      state.firebaseUser ? state.firebaseUser.photoURL : "",
+    photoURL: (state) => state.firebaseUser ? state.firebaseUser.photoURL : "",
   }
 });

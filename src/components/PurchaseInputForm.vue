@@ -74,13 +74,12 @@
       </v-row>
     </v-content>
 
-    <v-container fluid>
-    <v-radio-group v-model="paymentMethod">
-      <v-radio label="現金" value="1"></v-radio>
-      <v-radio label="クレジットカード" value="2"></v-radio>
-    </v-radio-group>
-  </v-container>
-
+      <v-container fluid>
+        <v-radio-group v-model="paymentMethod">
+          <v-radio label="現金" value="1"></v-radio>
+          <v-radio label="クレジットカード" value="2"></v-radio>
+        </v-radio-group>
+      </v-container>
          
       <b-button
         :disabled="!contactFormValidation.valid"
@@ -92,24 +91,17 @@
         >購入
       </b-button>
 
-      <CalcTotal></CalcTotal>
-
-
-
     </div>
 </template>
 
 <script>
 import VueTimepicker from 'vue2-timepicker'
 import 'vue2-timepicker/dist/VueTimepicker.css'
-import CalcTotal from "@/components/CalcTotal.vue";
 import Date from '@/components/Date.vue'
-import { mapActions } from "vuex";
 import axios from "axios";
 export default {
   components : {
     Date,
-    CalcTotal,
     VueTimepicker
   },
     data: () => ({
@@ -119,7 +111,6 @@ export default {
         address: '',
         telephone: '',
         totalPrice: 0,
-        orderItemList: [],
         orderToppingList:"",
         date: null,
         deliveryTime: '',
@@ -139,6 +130,7 @@ export default {
       },
     }),
     methods: {
+      
       search() {
         axios.get(`https://api.zipaddress.net/?zipcode=${this.zipcode}`)
         .then((response) => {
@@ -146,77 +138,34 @@ export default {
         })
       },
 
-      ...mapActions(["setInformation"],),
-
       purchase: function () {
-
-        if (this.$refs.form.validate()) {
-
-          for(var num in this.$store.state.cart) {
-
-            var orderItem = {
-
-              itemId : "",
-              quantity : "",
-              size : "",
-              orderToppingList: [] 
-
-            } 
-
-              orderItem.itemId = this.$store.state.cart[num].itemId
-              orderItem.quantity = this.$store.state.cart[num].quantity
-              orderItem.size = this.$store.state.cart[num].size
-
-              for(var number in this.$store.state.cart[num].toppingList) {
-                var toppingId = this.$store.state.cart[num].toppingList[number].id
-                orderItem.orderToppingList.push(toppingId)
-              }
-
-              this.orderItemList.push(orderItem)
-
-            }
-
-            for(var i in this.orderItemList) {
-
-            for(var n in this.orderItemList[i].orderToppingList) {
-
-            axios.post("http://localhost:8080/purchase", {
-              orderItemList: [{
-                itemId: this.orderItemList[i].itemId,
-                quantity: this.orderItemList[i].quantity,
-                size: this.orderItemList[i].size,
-                  orderToppingList: [{
-                    toppingId: this.orderItemList[i].orderToppingList[n]
-                  }]
-              }],
-                userId: this.$store.state.loginUser.id,
-                destinationName: this.name,
-                destinationEmail: this.email,
-                destinationZipcode: this.zipcode,
-                destinationAddress: this.address,
-                destinationTel: this.telephone,
-                totalPrice: this.totalPrice,
-                deliveryDate: this.date,
-                deliveryTime: this.deliveryTime,
-                paymentMethod: this.paymentMethod
-              })
-            .then((response) => {
-              console.log(response.data)
-              this.formReset()
-              this.showSnackBar(
-                'success',
-                '購入しました。'
-              )
-            })
-            .catch(err => {
-              this.showSnackBar(
-                'error',
-                '購入に失敗しました。時間をおいて再度お試しください。'
-              )
-              console.log(err)
-            })
-          }}
-        }
+        axios.post("http://localhost:8080/purchase", {
+            userId: this.$store.state.loginUser.id,
+            destinationName: this.name,
+            destinationEmail: this.email,
+            destinationZipcode: this.zipcode,
+            destinationAddress: this.address,
+            destinationTel: this.telephone,
+            totalPrice: this.totalPrice,
+            deliveryDate: this.date,
+            deliveryTime: this.deliveryTime,
+            paymentMethod: this.paymentMethod
+          })
+        .then((response) => {
+          console.log(response.data)
+          this.formReset()
+          this.showSnackBar(
+            'success',
+            '購入しました。'
+          )
+        })
+        .catch(err => {
+          this.showSnackBar(
+            'error',
+            '購入に失敗しました。時間をおいて再度お試しください。'
+          )
+          console.log(err)
+        })
       },
       showSnackBar: function (color, message) {
         this.snackBar.message = message
@@ -228,8 +177,6 @@ export default {
       }
     },
     created() {
-
-      console.log(this.deliveryTime)
 
       //税抜、消費税、税込を計算する
       var totalWithoutTax = 0
