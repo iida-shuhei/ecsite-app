@@ -1,7 +1,38 @@
 <template>
   <div>
-    <b-container class="container">
+      <v-card
+      class="mx-auto"
+      max-width="500"
+      v-for="item in items" :key="item.id"
+    >
+      <v-img
+        :src="require('@/assets/images/' + item.item.imagePath)"
+      ></v-img>
 
+      <v-card-title>
+        {{ item.item.name }}
+      </v-card-title>
+
+      <v-spacer></v-spacer>
+
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+          <v-card-title>
+            サイズ : {{ item.size }}<br>
+            数量 : {{ item.quantity + "個" }}<br>
+            合計: {{ item.subTotal.toLocaleString() + "円" }}
+          </v-card-title>
+        </v-col>
+      </v-row>
+    </v-container>
+          <v-card-subtitle>トッピング</v-card-subtitle>
+          <v-card-text v-for="(orderTopping, i) in item.orderToppingList" :key="i">
+            {{ orderTopping.topping.name }}
+          </v-card-text>
+      </v-card>
+
+    <b-container class="box">
     <v-form ref="form" class="form" v-model="contactFormValidation.valid" lazy-validation>
       <v-text-field
         v-model="name"
@@ -80,6 +111,10 @@
           <v-radio label="クレジットカード" value="2"></v-radio>
         </v-radio-group>
       </v-container>
+
+      {{ "税抜 : " + totalWithoutTax.toLocaleString() + "円" }}
+      {{ "消費税 : " + totalTax.toLocaleString() + "円" }}
+      {{ "税込 : " + totalPrice.toLocaleString() + "円" }}
          
       <b-button
         :disabled="!contactFormValidation.valid"
@@ -105,12 +140,13 @@ export default {
     VueTimepicker
   },
     data: () => ({
+        items:[],
+
         name: '',
         email: '',
         zipcode: '',
         address: '',
         telephone: '',
-        totalPrice: 0,
         orderToppingList:"",
         date: null,
         deliveryTime: '',
@@ -177,28 +213,47 @@ export default {
       }
     },
     created() {
-
-      //税抜、消費税、税込を計算する
-      var totalWithoutTax = 0
-      var totalTax = 0
-      for( var number in this.$store.state.cart) {
-        totalWithoutTax += this.$store.state.cart[number].totalPrice
-      }
-        totalTax += totalWithoutTax * 0.1
-        this.totalPrice = totalWithoutTax + totalTax
-
-
-      for( var num in this.$store.state.category) {
-        this.categories.push({
-          categoryId: this.$store.state.category[num].categoryId,
-          categoryName : this.$store.state.category[num].categoryName})
-      }
+       axios.get('http://localhost:8080/showShoppingCart')
+        .then((response) => {
+          this.items = response.data[0].orderItemList
+      })
     },
-  }
+
+    computed: {
+      totalWithoutTax() {
+        //税抜、消費税、税込を計算する
+        var totalWithoutTax = 0
+        for( var num in this.items) {
+          totalWithoutTax += this.items[num].subTotal
+        }
+        return totalWithoutTax
+      },
+      totalTax() {
+        //税抜、消費税、税込を計算する
+        var totalWithoutTax = 0
+        var totalTax = 0
+        for( var num in this.items) {
+          totalWithoutTax += this.items[num].subTotal
+        }
+          totalTax += totalWithoutTax * 0.1
+          return totalTax
+      },
+      totalPrice() {
+        //税抜、消費税、税込を計算する
+        var totalWithoutTax = 0
+        var totalTax = 0
+        for( var num in this.items) {
+          totalWithoutTax += this.items[num].subTotal
+        }
+          totalTax += totalWithoutTax * 0.1
+          return totalWithoutTax + totalTax
+      },
+    }
+}
 </script>
 
 <style scoped>
-  .container {
+  .box {
     border: dotted 2px black;
     width: 500px;
   }

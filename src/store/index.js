@@ -58,7 +58,6 @@ export default new Vuex.Store({
         priceL: ''
       }
     },
-    shoppingCart:[]
   },
   mutations: {
     setLoginUser(state, user) {

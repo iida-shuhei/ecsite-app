@@ -85,7 +85,7 @@ export default {
     },
     deleteItem(item) {
       axios.post('http://localhost:8080/delete', {
-        itemId: item.itemId
+        itemId: item.id
       })
       var items = this.items
       var index = items.indexOf(item)
