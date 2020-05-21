@@ -190,6 +190,7 @@ export default {
         .then((response) => {
           console.log(response.data)
           this.formReset()
+          this.$router.push('/top')
           this.showSnackBar(
             'success',
             '購入しました。'
