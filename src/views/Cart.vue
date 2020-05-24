@@ -1,7 +1,6 @@
 <template>
   <div>
     <Cart/>
-    <v-btn @click="toProcedure()">ご購入手続き</v-btn>
   </div>
 </template>
 
@@ -18,3 +17,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .cart {
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+  }
+</style>

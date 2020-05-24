@@ -1,38 +1,8 @@
 <template>
   <div>
-      <v-card
-      class="mx-auto"
-      max-width="500"
-      v-for="item in items" :key="item.id"
-    >
-      <v-img
-        :src="require('@/assets/images/' + item.item.imagePath)"
-      ></v-img>
+    <b-container>
+      <h3>送付先</h3>
 
-      <v-card-title>
-        {{ item.item.name }}
-      </v-card-title>
-
-      <v-spacer></v-spacer>
-
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-card-title>
-            サイズ : {{ item.size }}<br>
-            数量 : {{ item.quantity + "個" }}<br>
-            合計: {{ item.subTotal.toLocaleString() + "円" }}
-          </v-card-title>
-        </v-col>
-      </v-row>
-    </v-container>
-          <v-card-subtitle>トッピング</v-card-subtitle>
-          <v-card-text v-for="(orderTopping, i) in item.orderToppingList" :key="i">
-            {{ orderTopping.topping.name }}
-          </v-card-text>
-      </v-card>
-
-    <b-container class="box">
     <v-form ref="form" class="form" v-model="contactFormValidation.valid" lazy-validation>
       <v-text-field
         v-model="name"
@@ -72,23 +42,21 @@
         required
       ></v-text-field>
         
-        <v-snackbar
-          v-model="snackBar.show"
-          :color="snackBar.color"
-          :timeout="3000"
-          top
-          class="font-weight-bold"
-          >
-          {{snackBar.message}}
-        </v-snackbar>
       </v-form>
     </b-container>
+
+    <TotalPrice/>
 
     <v-content>
       <v-row justify="center">
         <v-col cols="8">
-          <Date v-model="date"/>
-          <span>配達希望日付 : {{ date }}</span>
+          <span class="demonstration">配達希望日 : </span>
+          <el-date-picker
+            v-model="selectedDate"
+            type="date"
+            placeholder="配達希望日"
+            :picker-options="pickerOptions">
+          </el-date-picker>
 
           <div>配達希望時間 : 
           <vue-timepicker 
@@ -99,6 +67,7 @@
           placeholder="配達希望時間"
           hour-label="時"
           minute-label="分"
+          :picker-options="timeOptions"
           ></vue-timepicker></div>
 
         </v-col>
@@ -112,10 +81,6 @@
         </v-radio-group>
       </v-container>
 
-      {{ "税抜 : " + totalWithoutTax.toLocaleString() + "円" }}
-      {{ "消費税 : " + totalTax.toLocaleString() + "円" }}
-      {{ "税込 : " + totalPrice.toLocaleString() + "円" }}
-         
       <b-button
         :disabled="!contactFormValidation.valid"
         @click="purchase()"
@@ -132,12 +97,12 @@
 <script>
 import VueTimepicker from 'vue2-timepicker'
 import 'vue2-timepicker/dist/VueTimepicker.css'
-import Date from '@/components/Date.vue'
+import TotalPrice from '@/components/TotalPrice.vue'
 import axios from "axios";
 export default {
   components : {
-    Date,
-    VueTimepicker
+    VueTimepicker,
+    TotalPrice
   },
     data: () => ({
         items:[],
@@ -151,6 +116,28 @@ export default {
         date: null,
         deliveryTime: '',
         paymentMethod: "1",
+
+        now: '',
+
+        timeOptions: {
+          disabledTime(time) {
+            return time.getTime() < Date.now().getTime;
+          }
+        },
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now();
+          },
+          shortcuts: [{
+            text: '当日をご希望の方はこちらをクリック',
+            onClick(picker) {
+              picker.$emit('pick', new Date());
+            }
+          }, 
+          ]
+        },
+        selectedDate: String,
+
         contactFormValidation: {
         valid: false,
         nameRules: [v => !!v || 'タイトルは必須項目です'],
@@ -158,12 +145,7 @@ export default {
         zipcodeRules: [v => !!v || '郵便番号は必須項目です'],
         addressRules: [v => !!v || '住所は必須項目です'],
         telephoneRules: [v => !!v || '電話番号は必須項目です']
-      },
-      snackBar: {
-        show: false,
-        color: '',
-        message: ''
-      },
+        },
     }),
     methods: {
       
@@ -182,8 +164,8 @@ export default {
             destinationZipcode: this.zipcode,
             destinationAddress: this.address,
             destinationTel: this.telephone,
-            totalPrice: this.totalPrice,
-            deliveryDate: this.date,
+            totalPrice: this.$route.params.totalPrice,
+            deliveryDate: this.selectedDate,
             deliveryTime: this.deliveryTime,
             paymentMethod: this.paymentMethod
           })
@@ -191,23 +173,10 @@ export default {
           console.log(response.data)
           this.formReset()
           this.$router.push('/top')
-          this.showSnackBar(
-            'success',
-            '購入しました。'
-          )
         })
         .catch(err => {
-          this.showSnackBar(
-            'error',
-            '購入に失敗しました。時間をおいて再度お試しください。'
-          )
           console.log(err)
         })
-      },
-      showSnackBar: function (color, message) {
-        this.snackBar.message = message
-        this.snackBar.color = color
-        this.snackBar.show = true
       },
       formReset: function () {
         this.$refs.form.reset()
@@ -218,38 +187,8 @@ export default {
         .then((response) => {
           this.items = response.data[0].orderItemList
       })
+      this.selectedDate = new Date().toISOString().substr(0, 10);
     },
-
-    computed: {
-      totalWithoutTax() {
-        //税抜、消費税、税込を計算する
-        var totalWithoutTax = 0
-        for( var num in this.items) {
-          totalWithoutTax += this.items[num].subTotal
-        }
-        return totalWithoutTax
-      },
-      totalTax() {
-        //税抜、消費税、税込を計算する
-        var totalWithoutTax = 0
-        var totalTax = 0
-        for( var num in this.items) {
-          totalWithoutTax += this.items[num].subTotal
-        }
-          totalTax += totalWithoutTax * 0.1
-          return totalTax
-      },
-      totalPrice() {
-        //税抜、消費税、税込を計算する
-        var totalWithoutTax = 0
-        var totalTax = 0
-        for( var num in this.items) {
-          totalWithoutTax += this.items[num].subTotal
-        }
-          totalTax += totalWithoutTax * 0.1
-          return totalWithoutTax + totalTax
-      },
-    }
 }
 </script>
 
@@ -257,5 +196,10 @@ export default {
   .box {
     border: dotted 2px black;
     width: 500px;
+  }
+  h1 {
+    font-family: 'Bradley Hand',sans-serif;
+    font-size: 80px;
+    text-align: center;
   }
 </style>

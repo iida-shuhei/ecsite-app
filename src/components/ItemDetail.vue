@@ -21,19 +21,16 @@
         <div>{{ item.description }}</div>
       </v-card-text>
 
-      <v-card-text>
-        <v-chip-group
-          active-class="deep-purple accent-4 white--text"
-          column
-          v-model="size"
-          >
+      <v-card-actions>
 
-          <v-chip value="M">{{ "[M]" + item.priceM.toLocaleString() + "円(税抜)" }}</v-chip>
+          <b-col>
+            <b-form-radio v-model="size" value="M">M {{ item.priceM.toLocaleString() + "円(税抜)" }}</b-form-radio>
+          </b-col>
+          <b-col>
+            <b-form-radio v-model="size" value="L">L {{ item.priceL.toLocaleString() + "円(税抜)" }}</b-form-radio>
+          </b-col>
 
-          <v-chip value="L">{{ "[L]" + item.priceL.toLocaleString() + "円(税抜)" }}</v-chip>
-
-        </v-chip-group>
-      </v-card-text>
+      </v-card-actions>
 
       <v-divider class="mx-4"></v-divider>
 
@@ -48,7 +45,7 @@
         <v-select
           v-model="selected"
           item-text="name"
-          item-value="id"
+          item-value="item"
           :items="item.toppingList"
           multiple
           return-object
@@ -141,15 +138,11 @@ export default {
   },
   methods: {
     addItem() {
-      
       var orderToppingId = []
-
       for(var num in this.selected) {
         orderToppingId.push(this.selected[num].id)
       }
-
       this.orderTopping = orderToppingId
-
       axios.post('http://localhost:8080/add', {
         itemId: this.item[0].id,
         quantity: this.quantity,
