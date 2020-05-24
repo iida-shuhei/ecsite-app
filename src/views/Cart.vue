@@ -10,11 +10,6 @@ export default {
   components: {
     Cart,
   },
-  methods: {
-    toProcedure() {
-      this.$router.push('/purchaseForm')
-    },
-  }
 }
 </script>
 

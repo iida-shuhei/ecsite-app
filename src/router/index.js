@@ -14,15 +14,11 @@ Vue.use(VueRouter)
       path:'/',
       name: 'Login',
       component: Login
-
-
     },
     {
       path:'/registerUser',
       name:'RegisterUser',
       component:RegisterUser
-
-
     },
   {
     path: '/top',

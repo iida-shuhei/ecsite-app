@@ -87,16 +87,10 @@
       <v-card-actions>
         <v-btn
           color="red"
-          width="240"
+          width="480"
           @click="addItem()"
         >
         <span class="cart">商品をかごに追加</span>
-        </v-btn>
-        <v-btn
-          color="red"
-          width="240"
-        >
-        <span class="cart">ご購入手続きへ</span>
         </v-btn>
       </v-card-actions>
 
@@ -105,6 +99,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import axios from "axios";
 export default {
   data() {
@@ -137,6 +132,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      "setShoppingCart"
+    ]),
     addItem() {
       var orderToppingId = []
       for(var num in this.selected) {
@@ -150,7 +148,8 @@ export default {
         orderTopping: this.orderTopping,
         subTotal: this.totalPrice
       })
-    }
+      this.setShoppingCart(this.item[0].id)
+    },
   }
 }
 </script>

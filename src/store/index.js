@@ -58,6 +58,7 @@ export default new Vuex.Store({
         priceL: ''
       }
     },
+    shoppingCart:false
   },
   mutations: {
     setLoginUser(state, user) {
@@ -67,7 +68,7 @@ export default new Vuex.Store({
       state.loginStatus = true;
     },
     deleteLoginUser(state) {
-      state.login_user = null;
+      state.loginUser = null;
     },
     setItemList(state, itemList) {
       state.itemList = itemList;
@@ -80,6 +81,9 @@ export default new Vuex.Store({
     },
     setEmail(state,email){
       state.loginUser.email = email
+    },
+    setShoppingCart(state,itemId) {
+      state.shoppingCart = itemId
     }
   },
   actions: {
@@ -110,6 +114,9 @@ export default new Vuex.Store({
     },
     setEmail({commit},email){
       commit("setEmail",email)
+    },
+    setShoppingCart({commit},itemId) {
+      commit("setShoppingCart",itemId)
     }
   },
   modules: {},
