@@ -129,7 +129,7 @@ export default {
           sortable: true,
         },
         {
-          value: "totalPrice",
+          value: "subTotal",
           text: "合計",
           sortable: true,
         },
@@ -152,11 +152,12 @@ export default {
             name: this.orderItem[num].item.name,
             size: this.orderItem[num].size,
             quantity: this.orderItem[num].quantity,
-            totalPrice: this.orderItem[num].subTotal.toLocaleString() + "円",
+            subTotal: this.orderItem[num].subTotal,
             id: this.orderItem[num].id,
             topping: this.orderItem[num].orderToppingList
           })
         }
+        console.log(this.orderItemList)
     })
   },
   computed: {
@@ -166,8 +167,8 @@ export default {
     totalWithoutTax() {
       //税抜、消費税、税込を計算する
       var totalWithoutTax = 0
-      for( var num in this.orderItem) {
-        totalWithoutTax += this.orderItem[num].subTotal
+      for( var num in this.itemList) {
+        totalWithoutTax += this.itemList[num].subTotal
       }
       return totalWithoutTax
     },
@@ -175,8 +176,8 @@ export default {
       //税抜、消費税、税込を計算する
       var totalWithoutTax = 0
       var totalTax = 0
-      for( var num in this.orderItem) {
-        totalWithoutTax += this.orderItem[num].subTotal
+      for( var num in this.itemList) {
+        totalWithoutTax += this.itemList[num].subTotal
       }
         totalTax += totalWithoutTax * 0.1
         return totalTax
@@ -185,8 +186,8 @@ export default {
       //税抜、消費税、税込を計算する
       var totalWithoutTax = 0
       var totalTax = 0
-      for( var num in this.orderItem) {
-        totalWithoutTax += this.orderItem[num].subTotal
+      for( var num in this.itemList) {
+        totalWithoutTax += this.itemList[num].subTotal
       }
         totalTax += totalWithoutTax * 0.1
         return totalWithoutTax + totalTax
