@@ -1,128 +1,84 @@
 <template>
-  <div>
-    <b-container>
-      <h3>送付先</h3>
 
-    <v-form ref="form" class="form" v-model="contactFormValidation.valid" lazy-validation>
-      <v-text-field
-        v-model="name"
-        :rules="contactFormValidation.nameRules"
-        label="名前"
-        required
-      ></v-text-field>
+  <b-container class="container">
 
-      <v-text-field
-        v-model="email"
-        :rules="contactFormValidation.emailRules"
-        label="メールアドレス"
-        required
-      ></v-text-field>
-        
-      <div class="d-flex flex-row align-baseline">
-      <v-text-field
-        v-model="zipcode"
-        :rules="contactFormValidation.zipcodeRules"
-        label="郵便番号"
-        required
-      ></v-text-field>
-      <b-button @click="search()">検索</b-button>
-      </div>
-        
-      <v-text-field
-        v-model="address"
-        :rules="contactFormValidation.addressRules"
-        label="住所"
-        required
-      ></v-text-field>
-        
-      <v-text-field
-        v-model="telephone"
-        :rules="contactFormValidation.telephoneRules"
-        label="電話番号"
-        required
-      ></v-text-field>
-        
-      </v-form>
-    </b-container>
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 
-    <TotalPrice/>
+      <el-form-item label="名前" prop="name">
+        <el-input v-model="ruleForm.name"></el-input>
+      </el-form-item>
 
-    <v-content>
-      <v-row justify="center">
-        <v-col cols="8">
-          <span class="demonstration">配達希望日 : </span>
-          <el-date-picker
-            v-model="selectedDate"
-            type="date"
-            placeholder="配達希望日"
-            :picker-options="pickerOptions">
-          </el-date-picker>
+      <el-form-item label="メール" prop="email">
+        <el-input v-model="ruleForm.email"></el-input>
+      </el-form-item>
 
-          <div>配達希望時間 : 
-          <vue-timepicker 
-          hide-disabled-items 
-          :hour-range="[[11, 22]]" 
-          :minute-interval="30" 
-          v-model="deliveryTime"
-          placeholder="配達希望時間"
-          hour-label="時"
-          minute-label="分"
-          :picker-options="timeOptions"
-          ></vue-timepicker></div>
+      <el-form-item label="電話番号" prop="telephone">
+        <el-input v-model="ruleForm.telephone"></el-input>
+      </el-form-item>
 
-        </v-col>
-      </v-row>
-    </v-content>
+      <el-form-item label="郵便番号" prop="zipcode">
+        <el-input v-model="ruleForm.zipcode" placeholder="123-4567の形式で入力してください"></el-input>
+      </el-form-item>
 
-      <v-container fluid>
-        <v-radio-group v-model="paymentMethod">
-          <v-radio label="現金" value="1"></v-radio>
-          <v-radio label="クレジットカード" value="2"></v-radio>
-        </v-radio-group>
-      </v-container>
+      <el-form-item label="住所" prop="address">
+        <el-input v-model="ruleForm.address"></el-input>
+      </el-form-item>
 
-      <b-button
-        :disabled="!contactFormValidation.valid"
-        @click="purchase()"
-        block
-        large
-        variant="dark"
-        class="mt-4 font-weight-bold"
-        >購入
-      </b-button>
+      <el-form-item label="配達希望日時" required>
 
-    </div>
+        <el-col :span="11">
+          <el-form-item prop="deliveryDate">
+            <el-date-picker type="date" :picker-options="pickerOptions" placeholder="日にち" v-model="ruleForm.deliveryDate" style="width: 100%;"></el-date-picker>
+          </el-form-item>
+        </el-col>
+
+        <el-col class="line" :span="2"></el-col>
+
+        <el-col :span="11">
+          <el-form-item prop="deliveryTime">
+            <el-time-select placeholder="時間" v-model="ruleForm.deliveryTime" style="width: 100%;"
+              :picker-options="{
+                start: '10:00',
+                step: '00:30',
+                end: '22:00'
+              }"></el-time-select>
+          </el-form-item>
+        </el-col>
+
+      </el-form-item>
+
+      <el-form-item label="お支払い方法" prop="paymentMethod">
+        <el-radio-group v-model="ruleForm.paymentMethod">
+          <el-radio label="現金"></el-radio>
+          <el-radio label="クレジットカード"></el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="submitForm('ruleForm')">購入</el-button>
+        <el-button @click="resetForm('ruleForm')">クリア</el-button>
+      </el-form-item>
+
+    </el-form>
+
+</b-container>
+
 </template>
 
 <script>
-import VueTimepicker from 'vue2-timepicker'
-import 'vue2-timepicker/dist/VueTimepicker.css'
-import TotalPrice from '@/components/TotalPrice.vue'
 import axios from "axios";
-export default {
-  components : {
-    VueTimepicker,
-    TotalPrice
-  },
-    data: () => ({
-        items:[],
-
-        name: '',
-        email: '',
-        zipcode: '',
-        address: '',
-        telephone: '',
-        orderToppingList:"",
-        date: null,
-        deliveryTime: '',
-        paymentMethod: "1",
-
-        now: '',
-
-        timeOptions: {
-          disabledTime(time) {
-            return time.getTime() < Date.now().getTime;
-          }
+  export default {
+    data() {
+      return {
+        ruleForm: {
+          name: '',
+          email: '',
+          telephone:'',
+          zipcode:'',
+          address: '',
+          deliveryDate: String,
+          deliveryTime: '',
+          paymentMethod: '',
         },
         pickerOptions: {
           disabledDate(time) {
@@ -136,28 +92,39 @@ export default {
           }, 
           ]
         },
-        selectedDate: String,
-
-        contactFormValidation: {
-        valid: false,
-        nameRules: [v => !!v || 'タイトルは必須項目です'],
-        emailRules: [v => !!v || 'メールは必須項目です'],
-        zipcodeRules: [v => !!v || '郵便番号は必須項目です'],
-        addressRules: [v => !!v || '住所は必須項目です'],
-        telephoneRules: [v => !!v || '電話番号は必須項目です']
-        },
-    }),
+        rules: {
+          name: [
+            { required: true, message: '名前を入力してください', trigger: 'change' },
+          ],
+          email: [
+            { type: 'email', required: true, message: 'メールを入力してください', trigger: 'change' },
+          ],
+          telephone: [
+            { pattern: /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/, required: true, message: '固定電話10桁〜携帯電話11桁の数値を入力してください', trigger: 'change' },
+          ],
+          zipcode: [
+            { pattern: /^\d{3}-?\d{4}$/g, required: true, message: '郵便番号を入力してください', trigger: 'change' },
+          ],
+          address: [
+            { required: true, message: '住所を入力してください', trigger: 'change' },
+          ],
+          deliveryDate: [
+            { type: 'date', required: true, message: '日にちを選択してください', trigger: 'change' }
+          ],
+          deliveryTime: [
+            { type: 'date', required: true, message: '時間を選択してください', trigger: 'change' }
+          ],
+          paymentMethod: [
+            { required: true, message: 'お支払い方法を選択してください', trigger: 'change' }
+          ],
+        }
+      };
+    },
     methods: {
-      
-      search() {
-        axios.get(`https://api.zipaddress.net/?zipcode=${this.zipcode}`)
-        .then((response) => {
-          this.address = response.data.data.address;
-        })
-      },
-
-      purchase: function () {
-        axios.post("http://localhost:8080/purchase", {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            axios.post("http://localhost:8080/purchase", {
             userId: this.$store.state.loginUser.id,
             destinationName: this.name,
             destinationEmail: this.email,
@@ -165,41 +132,25 @@ export default {
             destinationAddress: this.address,
             destinationTel: this.telephone,
             totalPrice: this.$route.params.totalPrice,
-            deliveryDate: this.selectedDate,
+            deliveryDate: this.deliveryDate,
             deliveryTime: this.deliveryTime,
             paymentMethod: this.paymentMethod
-          })
-        .then((response) => {
-          console.log(response.data)
-          this.formReset()
-          this.$router.push('/top')
-        })
-        .catch(err => {
-          console.log(err)
-        })
+          }).then(console.log('成功'))
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
-      formReset: function () {
-        this.$refs.form.reset()
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
       }
-    },
-    created() {
-       axios.get('http://localhost:8080/showShoppingCart')
-        .then((response) => {
-          this.items = response.data[0].orderItemList
-      })
-      this.selectedDate = new Date().toISOString().substr(0, 10);
-    },
-}
+    }
+  }
 </script>
 
 <style scoped>
-  .box {
-    border: dotted 2px black;
-    width: 500px;
-  }
-  h1 {
-    font-family: 'Bradley Hand',sans-serif;
-    font-size: 80px;
-    text-align: center;
+  .container {
+    width: 700px;
   }
 </style>
