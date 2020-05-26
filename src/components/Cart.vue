@@ -34,7 +34,7 @@
       </v-data-table><br>
       
         <v-card
-          class="mx-auto"
+          class="mx-auto price"
           max-width="344"
           raised
         >
@@ -157,7 +157,6 @@ export default {
             topping: this.orderItem[num].orderToppingList
           })
         }
-        console.log(this.orderItemList)
     })
   },
   computed: {
@@ -229,5 +228,8 @@ export default {
   }
   .shopping {
     margin-top: 30px;
+  }
+  .price {
+    text-align: center;
   }
 </style>

@@ -1,6 +1,31 @@
 <template>
+  <div>
 
-  <b-container class="container">
+  <div class="price">
+    <v-card
+      class="card"
+      max-width="344"
+      raised
+    >
+      <v-list-item three-line>
+        <v-list-item-content>
+          <v-list-item-title class="headline mb-1">
+            {{ "合計 : " + this.$route.params.totalPrice.toLocaleString() + "円" }}
+          </v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-avatar
+          tile
+          size="80"
+        >
+        <v-icon x-large>mdi mdi-cart-outline</v-icon>
+        </v-list-item-avatar>
+      </v-list-item>
+
+    </v-card>
+
+    <b-container class="container">
+
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 
@@ -17,7 +42,7 @@
       </el-form-item>
 
       <el-form-item label="郵便番号" prop="zipcode">
-        <el-input v-model="ruleForm.zipcode" placeholder="123-4567の形式で入力してください"></el-input>
+        <el-input v-model="ruleForm.zipcode"></el-input>
       </el-form-item>
 
       <el-form-item label="住所" prop="address">
@@ -28,7 +53,14 @@
 
         <el-col :span="11">
           <el-form-item prop="deliveryDate">
-            <el-date-picker type="date" :picker-options="pickerOptions" placeholder="日にち" v-model="ruleForm.deliveryDate" style="width: 100%;"></el-date-picker>
+            <el-date-picker 
+              type="date" 
+              :clearable=false
+              :picker-options="pickerOptions" 
+              placeholder="日にち" 
+              v-model="ruleForm.deliveryDate" 
+              style="width: 100%;">
+            </el-date-picker>
           </el-form-item>
         </el-col>
 
@@ -36,12 +68,12 @@
 
         <el-col :span="11">
           <el-form-item prop="deliveryTime">
-            <el-time-select placeholder="時間" v-model="ruleForm.deliveryTime" style="width: 100%;"
-              :picker-options="{
-                start: '10:00',
-                step: '00:30',
-                end: '22:00'
-              }"></el-time-select>
+            <el-time-select 
+              placeholder="時間" 
+              v-model="ruleForm.deliveryTime" 
+              style="width: 100%;"
+            >
+            </el-time-select>
           </el-form-item>
         </el-col>
 
@@ -49,8 +81,8 @@
 
       <el-form-item label="お支払い方法" prop="paymentMethod">
         <el-radio-group v-model="ruleForm.paymentMethod">
-          <el-radio label="現金"></el-radio>
-          <el-radio label="クレジットカード"></el-radio>
+          <el-radio label="1">現金</el-radio>
+          <el-radio label="2">クレジットカード</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -61,11 +93,14 @@
 
     </el-form>
 
-</b-container>
+    </b-container>
+  </div>
 
+  </div>
 </template>
 
 <script>
+import moment from "moment";
 import axios from "axios";
   export default {
     data() {
@@ -76,9 +111,9 @@ import axios from "axios";
           telephone:'',
           zipcode:'',
           address: '',
-          deliveryDate: String,
+          deliveryDate: '',
           deliveryTime: '',
-          paymentMethod: '',
+          paymentMethod: "1",
         },
         pickerOptions: {
           disabledDate(time) {
@@ -112,7 +147,7 @@ import axios from "axios";
             { type: 'date', required: true, message: '日にちを選択してください', trigger: 'change' }
           ],
           deliveryTime: [
-            { type: 'date', required: true, message: '時間を選択してください', trigger: 'change' }
+            { required: true, message: '時間を選択してください', trigger: 'change' }
           ],
           paymentMethod: [
             { required: true, message: 'お支払い方法を選択してください', trigger: 'change' }
@@ -126,16 +161,17 @@ import axios from "axios";
           if (valid) {
             axios.post("http://localhost:8080/purchase", {
             userId: this.$store.state.loginUser.id,
-            destinationName: this.name,
-            destinationEmail: this.email,
-            destinationZipcode: this.zipcode,
-            destinationAddress: this.address,
-            destinationTel: this.telephone,
+            destinationName: this.ruleForm.name,
+            destinationEmail: this.ruleForm.email,
+            destinationZipcode: this.ruleForm.zipcode,
+            destinationAddress: this.ruleForm.address,
+            destinationTel: this.ruleForm.telephone,
             totalPrice: this.$route.params.totalPrice,
-            deliveryDate: this.deliveryDate,
-            deliveryTime: this.deliveryTime,
-            paymentMethod: this.paymentMethod
+            deliveryDate: moment(this.ruleForm.deliveryDate).format("YYYY-MM-DD"),
+            deliveryTime: this.ruleForm.deliveryTime,
+            paymentMethod: this.ruleForm.paymentMethod
           }).then(console.log('成功'))
+          this.$router.push('/top')
           } else {
             console.log('error submit!!');
             return false;
@@ -145,6 +181,9 @@ import axios from "axios";
       resetForm(formName) {
         this.$refs[formName].resetFields();
       }
+    },
+    created() {
+      this.deliveryDate = new Date().toISOString().substr(0, 10);
     }
   }
 </script>
@@ -152,5 +191,11 @@ import axios from "axios";
 <style scoped>
   .container {
     width: 700px;
+  }
+  .card {
+    text-align: right;
+  }
+  .price {
+    float: right;
   }
 </style>
