@@ -86,6 +86,28 @@
         </el-radio-group>
       </el-form-item>
 
+      <el-form-item label="クレジットカード番号" prop="cardNumber" v-if="ruleForm.paymentMethod == 2">
+        <el-input v-model="ruleForm.cardNumber"></el-input>
+      </el-form-item>
+
+      <el-form-item label="有効期限" v-if="ruleForm.paymentMethod == 2" prop="cardExpYearAndMonth">
+        <el-date-picker
+          v-model="ruleForm.cardExpYearAndMonth"
+          type="month"
+          :picker-options="pickerOnlyYearAndMonthOptions"
+          placeholder="年月を選択">
+        </el-date-picker>
+
+      </el-form-item>
+
+      <el-form-item label="カード名義人" prop="cardName" v-if="ruleForm.paymentMethod == 2">
+        <el-input v-model="ruleForm.cardName"></el-input>
+      </el-form-item>
+
+      <el-form-item label="セキュリティコード" prop="cardCvv" v-if="ruleForm.paymentMethod == 2">
+        <el-input v-model="ruleForm.cardCvv"></el-input>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="submitForm('ruleForm')">購入</el-button>
         <el-button @click="resetForm('ruleForm')">クリア</el-button>
@@ -114,18 +136,20 @@ import axios from "axios";
           deliveryDate: '',
           deliveryTime: '',
           paymentMethod: "1",
+          cardNumber:'',
+          cardExpYearAndMonth:'',
+          cardName:'',
+          cardCvv:'',
         },
         pickerOptions: {
           disabledDate(time) {
             return time.getTime() < Date.now();
           },
-          shortcuts: [{
-            text: '当日をご希望の方はこちらをクリック',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, 
-          ]
+        },
+        pickerOnlyYearAndMonthOptions: {
+          disabledDate(time) {
+            return time.getTime() < new Date();
+          },
         },
         rules: {
           name: [
@@ -152,6 +176,18 @@ import axios from "axios";
           paymentMethod: [
             { required: true, message: 'お支払い方法を選択してください', trigger: 'change' }
           ],
+          cardNumber: [
+            { pattern: /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6011[0-9]{12}|3(?:0[0-5]|[68][0-9])[0-9]{11}|3[47][0-9]{13}|(?:2131|1800|35[0-9]{3})[0-9]{11})$/, required: true, message: 'クレジットカード番号を入力してください', trigger: 'change' }
+          ],
+          cardName: [
+            { required: true, message: '名前を入力してください', trigger: 'change' }
+          ],
+          cardExpYearAndMonth: [
+            { required: true, message: '有効期限（年月）を入力してください', trigger: 'change' }
+          ],
+          cardCvv: [
+            { pattern: "^[0-9]{3}$", required: true, message: 'セキュリティーコードは3桁の数字を入力してください', trigger: 'change' }
+          ],
         }
       };
     },
@@ -169,9 +205,15 @@ import axios from "axios";
             totalPrice: this.$route.params.totalPrice,
             deliveryDate: moment(this.ruleForm.deliveryDate).format("YYYY-MM-DD"),
             deliveryTime: this.ruleForm.deliveryTime,
-            paymentMethod: this.ruleForm.paymentMethod
-          }).then(console.log('成功'))
-          this.$router.push('/top')
+            paymentMethod: this.ruleForm.paymentMethod,
+            cardNumber: this.ruleForm.cardNumber,
+            cardName:this.ruleForm.cardName,
+            cardExpYear:this.ruleForm.cardExpYear,
+            cardExpMonth:this.ruleForm.cardExpMonth,
+            cardCvv:this.ruleForm.cardCvv
+          }).then
+            alert('ご注文ありがとうございました')
+            this.$router.push('/')
           } else {
             console.log('error submit!!');
             return false;
@@ -184,6 +226,17 @@ import axios from "axios";
     },
     created() {
       this.deliveryDate = new Date().toISOString().substr(0, 10);
+
+      axios.post('http://localhost:8080/login/findById', {
+        userId: 1
+      }).then((res) => {
+        this.ruleForm.name = res.data.name
+        this.ruleForm.email = res.data.email
+        this.ruleForm.zipcode = res.data.zipcode
+        this.ruleForm.address = res.data.address
+        this.ruleForm.telephone = res.data.telephone
+
+      })
     }
   }
 </script>
@@ -194,8 +247,5 @@ import axios from "axios";
   }
   .card {
     text-align: right;
-  }
-  .price {
-    float: right;
   }
 </style>

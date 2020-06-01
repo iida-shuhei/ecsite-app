@@ -4,7 +4,7 @@
       <h2>Menu</h2>
     </b-navbar-brand>
     <div class="title">
-      <router-link to="/top">
+      <router-link to="/">
         <b-navbar-brand class="ml-1 mr-5 display-1 font-weight-bold">
             <h2>PizzaHouse</h2>
         </b-navbar-brand>
@@ -41,7 +41,6 @@ export default {
     opacity: 0.8;
     z-index: 1;
     text-align: center;
-    position: sticky;
   }
   .title {
     position: absolute;

@@ -19,7 +19,7 @@
                 <v-icon> mdi mdi-home</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title @click="toPage('/top')" class="text-white"
+                <v-list-item-title @click="toPage('/')" class="text-white"
                   >ホーム</v-list-item-title
                 >
               </v-list-item-content>

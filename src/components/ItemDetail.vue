@@ -115,7 +115,7 @@ export default {
   },
   created() {
     this.item = this.$store.state.itemList.filter(
-      (elm) => elm.id === this.$route.params.itemId);
+      (elm) => elm.id === JSON.parse(decodeURIComponent(this.$route.query.itemId)))
   },
   computed: {
     totalPrice: function() {
@@ -149,6 +149,8 @@ export default {
         subTotal: this.totalPrice
       })
       this.setShoppingCart(this.item[0].id)
+      this.$router.push('/')
+      alert('カートに追加しました')
     },
   }
 }

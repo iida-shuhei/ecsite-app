@@ -11,7 +11,7 @@ Vue.use(VueRouter)
 
   const routes = [
     {
-      path:'/',
+      path:'/login',
       name: 'Login',
       component: Login
     },
@@ -21,12 +21,12 @@ Vue.use(VueRouter)
       component:RegisterUser
     },
   {
-    path: '/top',
+    path: '/',
     name: 'Top',
     component: Top
   },
   {
-    path: '/itemDetail/itemId=:itemId',
+    path: '/itemDetail/:itemId',
     name: 'ItemDetail',
     component: ItemDetail
   },

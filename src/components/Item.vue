@@ -2,7 +2,12 @@
   <v-container class="box">
     <v-row>
       <v-col cols=4 v-for="item in this.$store.state.itemList" :key="item.id">
-        <router-link :to="{ name: 'ItemDetail', params : { itemId: item.id }}" class="link">
+        <router-link 
+          :to="{ 
+          name: 'ItemDetail', 
+          query: { itemId: encodeURIComponent(JSON.stringify(item.id)) }}"
+          class="link"
+        >
           <v-hover v-slot:default="{ hover }">
             <v-card
               class="mx-auto"
