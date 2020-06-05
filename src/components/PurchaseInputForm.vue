@@ -1,31 +1,6 @@
 <template>
   <div>
-
-  <div class="price">
-    <v-card
-      class="card"
-      max-width="344"
-      raised
-    >
-      <v-list-item three-line>
-        <v-list-item-content>
-          <v-list-item-title class="headline mb-1">
-            {{ "合計 : " + this.$route.params.totalPrice.toLocaleString() + "円" }}
-          </v-list-item-title>
-        </v-list-item-content>
-
-        <v-list-item-avatar
-          tile
-          size="80"
-        >
-        <v-icon x-large>mdi mdi-cart-outline</v-icon>
-        </v-list-item-avatar>
-      </v-list-item>
-
-    </v-card>
-
     <b-container class="container">
-
 
     <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
 
@@ -118,7 +93,6 @@
     </b-container>
   </div>
 
-  </div>
 </template>
 
 <script>

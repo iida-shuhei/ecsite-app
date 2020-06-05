@@ -46,20 +46,6 @@
               </v-list-item-content>
             </v-list-item>
 
-            <template>
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon> mdi mdi-bell-check-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title
-                    class="text-white"
-                    >このサイトについて</v-list-item-title
-                  >
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-
           </v-list-item-group>
         </v-list>
         <Logout></Logout>
@@ -83,7 +69,7 @@ export default {
   },
   methods: {
     toPage(path) {
-      this.$router.push(path);
+      this.$router.push(path).catch(err => {err});
     },
   }
 };

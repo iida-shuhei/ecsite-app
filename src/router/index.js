@@ -26,7 +26,7 @@ Vue.use(VueRouter)
     component: Top
   },
   {
-    path: '/itemDetail/:itemId',
+    path: '/itemDetail/:itemId?',
     name: 'ItemDetail',
     component: ItemDetail
   },
