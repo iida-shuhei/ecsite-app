@@ -12,7 +12,7 @@ Vue.use(VueRouter)
 
   const routes = [
     {
-      path:'/',
+      path:'/login',
       name: 'Login',
       component: Login
     },
@@ -22,15 +22,15 @@ Vue.use(VueRouter)
       component:RegisterUser
     },
   {
-    path: '/top',
+    path: '/',
     name: 'Top',
     component: Top,
-    //ログインしていたら上記のパスに飛ぶことを許可しない
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
     beforeEnter(to, from, next) {
-      if (!store.state.loginStatus) {
+      if (store.state.loginStatus) {
         next();
       } else {
-        next("/");
+        next("/login");
       }
     },
   },
@@ -38,12 +38,12 @@ Vue.use(VueRouter)
     path: '/itemDetail/:itemId?',
     name: 'ItemDetail',
     component: ItemDetail,
-    //ログインしていたら上記のパスに飛ぶことを許可しない
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
     beforeEnter(to, from, next) {
-      if (!store.state.loginStatus) {
+      if (store.state.loginStatus) {
         next();
       } else {
-        next("/");
+        next("/login");
       }
     },
   },
@@ -51,12 +51,12 @@ Vue.use(VueRouter)
     path: '/cart',
     name: 'Cart',
     component: Cart,
-    //ログインしていたら上記のパスに飛ぶことを許可しない
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
     beforeEnter(to, from, next) {
-      if (!store.state.loginStatus) {
+      if (store.state.loginStatus) {
         next();
       } else {
-        next("/");
+        next("/login");
       }
     },
   },
@@ -64,12 +64,12 @@ Vue.use(VueRouter)
     path: '/purchaseForm',
     name: 'PurchaseForm',
     component: PurchaseForm,
-    //ログインしていたら上記のパスに飛ぶことを許可しない
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
     beforeEnter(to, from, next) {
-      if (!store.state.loginStatus) {
+      if (store.state.loginStatus) {
         next();
       } else {
-        next("/");
+        next("/login");
       }
     },
   },

@@ -24,8 +24,8 @@ export default{
     ...mapActions(["logout","deleteLoginUser","changeLoginStatus"]),
     logout(){
       firebase.auth().signOut();
-      this.$router.push("/");
       this.changeLoginStatus();
+      this.$router.push("/login");
     }
   },
   computed:{

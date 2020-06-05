@@ -34,7 +34,13 @@ data(){
   }
 },
   methods: {
-    ...mapActions(["login", "setLoginUser", "loginStatus",'deleteLoginUser','setFirebaseUser']),
+    ...mapActions([
+      "login", 
+      "setLoginUser", 
+      "loginStatus",
+      'deleteLoginUser',
+      'setFirebaseUser'
+    ]),
   },
   components:{
     Loading
@@ -42,28 +48,30 @@ data(){
   created() {
     firebase.auth().onAuthStateChanged((user) => {
       this.loading = false;
-      if (user) {
-        this.setFirebaseUser(user);
-        axios
-          .post("/login/findAllByMail", {
-            email: firebase.auth().currentUser.email,
-          })
-          .then((response) => {
-            if (!(response.data.id)) {
-              this.$store.dispatch("setEmail",firebase.auth().currentUser.email)
-              this.$router.push("/registerUser");
-            } else if (response.data.id) {
-              this.setLoginUser(response.data);
-              this.loginStatus(true);
-              this.$router.push("/top");
-            } else{
-              this.deleteLoginUser();
-            }
-          });
-      }
-    });
-  },
-};
+        if (user) {
+          this.setFirebaseUser(user);
+            axios
+              .post("/login/findAllByMail", {
+                email: firebase.auth().currentUser.email,
+              })
+              .then((response) => {
+                if (!(response.data.id)) {
+                  this.$store.dispatch("setEmail",firebase.auth().currentUser.email)
+                  this.$router.push("/registerUser");
+                } else if (response.data.id) {
+                  this.setLoginUser(response.data);
+                  this.loginStatus(true);
+                  this.$router.push("/");
+                }
+              });
+            this.loading = true
+          } else {
+            firebase.auth().signOut();
+            this.deleteLoginUser();
+        }
+      })
+    }
+}
 </script>
 
 <style scoped>

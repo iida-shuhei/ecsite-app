@@ -1,5 +1,5 @@
 <template>
-  <div id="adminside">
+  <div id="adminside" v-if="this.$store.state.loginStatus">
     <div>
       <b-sidebar
         id="sidebar-backdrop"
