@@ -35,11 +35,10 @@ data(){
       if (user) {
         this.setFirebaseUser(user);
         axios
-          .post("http://localhost:8080/login/findAllByMail", {
+          .post("/login/findAllByMail", {
             email: firebase.auth().currentUser.email,
           })
           .then((response) => {
-              console.log(response.data)
             if (!(response.data.id)) {
               this.$store.dispatch("setEmail",firebase.auth().currentUser.email)
               this.$router.push("/registerUser");

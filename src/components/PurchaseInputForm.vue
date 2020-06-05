@@ -195,7 +195,7 @@ import axios from "axios";
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            axios.post("http://localhost:8080/purchase", {
+            axios.post("/purchase", {
             userId: this.$store.state.loginUser.id,
             destinationName: this.ruleForm.name,
             destinationEmail: this.ruleForm.email,

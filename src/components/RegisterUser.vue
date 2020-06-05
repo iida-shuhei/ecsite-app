@@ -77,7 +77,7 @@ export default{
           //ユーザー登録処理
           register(){
               this.name = this.name.replace("　","")
-              axios.post("http://localhost:8080/registerUserForm/register", {
+              axios.post("/register", {
               name: this.name,
               email: this.email,
               zipcode:this.zipcode,

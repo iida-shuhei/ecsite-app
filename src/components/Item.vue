@@ -54,7 +54,7 @@ export default {
     }
   },
   created() {
-    axios.get("http://localhost:8080/item/showItems")
+    axios.get("/item/showItems")
       .then((response) => {
         this.setItemList(response.data)
       });

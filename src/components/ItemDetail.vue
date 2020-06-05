@@ -141,7 +141,7 @@ export default {
         orderToppingId.push(this.selected[num].id)
       }
       this.orderTopping = orderToppingId
-      axios.post('http://localhost:8080/add', {
+      axios.post('/add', {
         itemId: this.item[0].id,
         quantity: this.quantity,
         size: this.size,

@@ -34,7 +34,7 @@ export default {
   },
 
   created() {
-    axios.get('http://localhost:8080/showShoppingCart')
+    axios.get('/showShoppingCart')
     .then((response) => {
       this.items = response.data[0].orderItemList
     })
