@@ -64,8 +64,8 @@ export default new Vuex.Store({
     setLoginUser(state, user) {
       state.loginUser = user;
     },
-    loginStatus(state) {
-      state.loginStatus = true;
+    loginStatus(state,status) {
+      state.loginStatus = status;
     },
     deleteLoginUser(state) {
       state.loginUser = null;
@@ -100,8 +100,8 @@ export default new Vuex.Store({
     setLoginUser({ commit }, user) {
       commit("setLoginUser", user);
     },
-    loginStatus({ commit }) {
-      commit("loginStatus");
+    loginStatus({ commit }, status) {
+      commit("loginStatus",status);
     },
     setItemList({ commit }, itemList) {
       commit("setItemList", itemList);

@@ -4,7 +4,7 @@
       <h2>Menu</h2>
     </b-navbar-brand>
     <div class="title">
-      <router-link to="/">
+      <router-link to="/top">
         <b-navbar-brand class="ml-1 mr-5 display-1 font-weight-bold">
             <h2>PizzaHouse</h2>
         </b-navbar-brand>

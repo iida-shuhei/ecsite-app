@@ -19,7 +19,7 @@
                 <v-icon> mdi mdi-home</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title @click="toPage('/')" class="text-white"
+                <v-list-item-title @click="toPage('/top')" class="text-white"
                   >ホーム</v-list-item-title
                 >
               </v-list-item-content>
@@ -45,10 +45,9 @@
                 >
               </v-list-item-content>
             </v-list-item>
-
           </v-list-item-group>
         </v-list>
-        <Logout></Logout>
+        <Logout :class="logoutClass" />
       </b-sidebar>
     </div>
   </div>
@@ -58,10 +57,11 @@
 import Logout from "@/components/Logout";
 export default {
   components:{
-        Logout
+    Logout
   },
   data() {
     return {
+      logoutClass: ["px-4", "my-5", "fixed-bottom"]
     }
   },
   mounted() {
@@ -71,6 +71,13 @@ export default {
     toPage(path) {
       this.$router.push(path).catch(err => {err});
     },
+  },
+  abjustLogout() {
+    if (window.innerHeight < 600) {
+      this.logoutClass = ["px-4", "my-5"];
+    } else {
+      this.logoutClass = ["px-4", "my-5", "fixed-bottom"];
+    }
   }
 };
 </script>

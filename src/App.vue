@@ -12,12 +12,11 @@ import SideNav from '@/components/SideNav'
 export default {
   data() {
     return {
-      
     }
   },
   components : {
     Header,
     SideNav
-  }
+  },
 }
 </script>
