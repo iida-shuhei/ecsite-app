@@ -1,5 +1,5 @@
 <template>
-  <b-navbar class="header">
+  <b-navbar class="sticky-top header">
     <b-navbar-brand v-b-toggle.sidebar-backdrop class="ml-1 mr-5 display-1 font-weight-bold">
       <h2>Menu</h2>
     </b-navbar-brand>
