@@ -32,23 +32,17 @@
           <label>メールアドレス</label>
           <div class="row">
             <div class="col-xs-4">
-              <ValidationProvider
-                name="メール"
-                rules="required|email"
-              >
-              <div slot-scope="ProviderProps">
+              <div>
               <input
                 type="email"
                 name="email"
+                disabled="disabled"
                 class="form-control"
                 placeholder="メールアドレス"
                 v-model="email"
                 size="50"
-                required
               />
-              <p class="validate">{{ ProviderProps.errors[0] }}</p>
               </div>
-              </ValidationProvider>
             </div>
           </div>
         </div>
@@ -179,7 +173,7 @@ export default{
         this.setLoginUser(response.data);
         this.loginStatus();
         alert("登録が完了しました")
-        this.$router.push("/top")
+        this.$router.push("/")
     })
     }
   }
