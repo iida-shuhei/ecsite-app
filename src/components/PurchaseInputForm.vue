@@ -102,14 +102,11 @@
 <script>
 import VueTimepicker from 'vue2-timepicker'
 import 'vue2-timepicker/dist/VueTimepicker.css'
-import CalcTotal from "@/components/CalcTotal.vue";
-import Date from '@/components/Date.vue'
 import { mapActions } from "vuex";
 import axios from "axios";
 export default {
   components : {
-    Date,
-    CalcTotal,
+    
     VueTimepicker
   },
     data: () => ({

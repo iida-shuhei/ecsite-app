@@ -20,7 +20,7 @@
                   size="50"
                   required
                 />
-                <p class="validate">{{ ProviderProps.errors[0] }}</p>
+                <span class="validate">{{ ProviderProps.errors[0] }}</span>
                 </div>
               </ValidationProvider>
             </div>
@@ -41,6 +41,7 @@
                 placeholder="メールアドレス"
                 v-model="email"
                 size="50"
+                required
               />
               </div>
             </div>
@@ -52,8 +53,9 @@
           <div class="row">
             <div class="col-xs-4">
               <ValidationProvider
-                name="メール"
-                :rules="{ regex: /^\d{7}$/ }"
+                name="郵便番号"
+                :rules="{ zipcode: /^\d{7}$/ }"
+                 v-slot="ProviderProps"
                 
               >
               <input
@@ -62,8 +64,12 @@
                 class="form-control"
                 placeholder="郵便番号"
                 v-model="zipcode"
-                size="30"
+                size="40"
+                required
+                
               />
+              <b-button @click="search()">検索</b-button><br>
+              <span class="validate">{{ ProviderProps.errors[0] }}</span>
               </ValidationProvider>
             </div>
           </div>
@@ -77,7 +83,7 @@
                 type="text"
                 name="address"
                 class="form-control"
-                placeholder="郵便番号"
+                placeholder=住所
                 v-model="address"
                 size="30"
               />
@@ -89,14 +95,18 @@
           <label>電話番号</label>
           <div class="row">
             <div class="col-xs-4">
+              <ValidationProvider :rules="{ tel: /\A(((0(\d{1}[-(]?\d{4}|\d{2}[-(]?\d{3}|\d{3}[-(]?\d{2}|\d{4}[-(]?\d{1}|[5789]0[-(]?\d{4})[-)]?)|\d{1,4}\-?)\d{4}|0120[-(]?\d{3}[-)]?\d{3})\z/}" v-slot="ProviderProps">
               <input
                 type="tel"
-                name="telephone"
+                name="電話番号"
                 class="form-control"
                 placeholder="電話番号"
                 v-model="telephone"
                 size="50"
               />
+              <span class="validate">{{ ProviderProps.errors[0] }}</span>
+
+              </ValidationProvider>
             </div>
           </div>
         </div>
@@ -135,9 +145,13 @@ extend("email", {
   message: "{_field_}はメールアドレスの形式ではありません",
 });
 
-extend("regex", {
+extend("zipcode", {
   ...regex,
-  message: "{_field_}は数字７桁で入力してください",
+  message: "{_field_}は半角数字７桁で入力してください",
+});
+extend("tel", {
+  ...regex,
+  message: "{_field_}は正しく入力してください",
 });
 
 
@@ -175,7 +189,13 @@ export default{
         alert("登録が完了しました")
         this.$router.push("/")
     })
-    }
+    },
+    search() {
+        axios.get(`https://api.zipaddress.net/?zipcode=${this.zipcode}`)
+        .then((response) => {
+          this.address = response.data.data.address;
+        })
+      },
   }
 }
 </script>
