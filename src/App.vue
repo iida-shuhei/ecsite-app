@@ -9,6 +9,7 @@
 <script>
 import Header from '@/components/Header'
 import SideNav from '@/components/SideNav'
+
 export default {
   data() {
     return {
