@@ -26,7 +26,7 @@
             </div>
           </div>
         </div>
-        {{ name }}
+       
 
         <div class="form-group">
           <label>メールアドレス</label>
@@ -57,14 +57,20 @@
           <label>郵便番号</label>
           <div class="row">
             <div class="col-xs-4">
+              <ValidationProvider
+                name="メール"
+                :rules="{ regex: /^\d{7}$/ }"
+                
+              >
               <input
                 type="tel"
-                name="zipcode"
+                name="郵便番号"
                 class="form-control"
                 placeholder="郵便番号"
                 v-model="zipcode"
                 size="30"
               />
+              </ValidationProvider>
             </div>
           </div>
         </div>
@@ -121,7 +127,7 @@ import axios from "axios";
 import { mapActions } from "vuex";
 
 import { extend, ValidationProvider, ValidationObserver ,setInteractionMode} from "vee-validate";
-import { required, email } from "vee-validate/dist/rules";
+import { required, email,regex } from "vee-validate/dist/rules";
 
 
 setInteractionMode("eager");
@@ -134,6 +140,13 @@ extend("email", {
   ...email,
   message: "{_field_}はメールアドレスの形式ではありません",
 });
+
+extend("regex", {
+  ...regex,
+  message: "{_field_}は数字７桁で入力してください",
+});
+
+
 
 export default{
   components: {
