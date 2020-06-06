@@ -1,4 +1,7 @@
 <template>
+<div class="register">
+    <h2 class="registerTitle">ユーザー登録画面</h2>
+<div class="registerForm">
   <div class="form-container container">
     <ValidationObserver ref="observer" v-slot="ObserverProps">
       <form>
@@ -92,10 +95,10 @@
         </div>
 
         <div class="form-group">
-          <label>電話番号</label>
+          <label>電話番号(携帯)</label>
           <div class="row">
             <div class="col-xs-4">
-              <ValidationProvider :rules="{ tel: /\A(((0(\d{1}[-(]?\d{4}|\d{2}[-(]?\d{3}|\d{3}[-(]?\d{2}|\d{4}[-(]?\d{1}|[5789]0[-(]?\d{4})[-)]?)|\d{1,4}\-?)\d{4}|0120[-(]?\d{3}[-)]?\d{3})\z/}" v-slot="ProviderProps">
+              <ValidationProvider :rules =" { tel: /^(0[5-9]0[0-9]{8}|0[1-9][1-9][0-9]{7})$/} " v-slot="ProviderProps">
               <input
                 type="tel"
                 name="電話番号"
@@ -103,6 +106,7 @@
                 placeholder="電話番号"
                 v-model="telephone"
                 size="50"
+                required
               />
               <span class="validate">{{ ProviderProps.errors[0] }}</span>
 
@@ -124,6 +128,8 @@
       </form>
     </ValidationObserver>
   </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -204,5 +210,26 @@ export default{
 .validate{
   color:red;
 }
+.register{
+  margin: 0 auto;
+  margin-top:4%;
+  
+}
+.registerForm{
+  background:#EEEEEE;
+}
+.btn-container{
+  text-align: center;
+}
+.registerTitle{
+  position:relative;
+  text-align: center;
+  
+}
+.form-container.container{
+  margin:20px;
+}
+
+
 
 </style>
