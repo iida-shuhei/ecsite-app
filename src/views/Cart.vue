@@ -1,7 +1,6 @@
 <template>
   <div>
     <Cart/>
-    <v-btn @click="toProcedure()">ご購入手続き</v-btn>
   </div>
 </template>
 
@@ -11,10 +10,13 @@ export default {
   components: {
     Cart,
   },
-  methods: {
-    toProcedure() {
-      this.$router.push('/purchaseForm')
-    },
-  }
 }
 </script>
+
+<style scoped>
+  .cart {
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+  }
+</style>

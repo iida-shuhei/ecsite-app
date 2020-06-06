@@ -115,9 +115,11 @@
     </ValidationObserver>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import { mapActions } from "vuex";
+
 import { extend, ValidationProvider, ValidationObserver ,setInteractionMode} from "vee-validate";
 import { required, email } from "vee-validate/dist/rules";
 
@@ -133,49 +135,47 @@ extend("email", {
   message: "{_field_}はメールアドレスの形式ではありません",
 });
 
-export default {
+export default{
   components: {
     ValidationProvider,
     ValidationObserver,
   },
-  data() {
-    return {
-      name: null,
-      email: this.$store.state.loginUser.email,
-      zipcode: null,
-      address: null,
-      telephone: null,
-    };
+  data(){
+    return{
+      name:null,
+      email:this.$store.state.loginUser.email,
+      zipcode:null,
+      address:null,
+      telephone:null
+    }
   },
-  methods: {
-    ...mapActions(["setLoginUser", "loginStatus"]),
+  methods:{
+    ...mapActions(["setLoginUser","loginStatus"]),
     //ユーザー登録処理
-    register() {
-      this.$refs.observer.validate();
-      this.name = this.name.replace("　", "");
-      axios
-        .post("http://localhost:8080/registerUserForm/register", {
-          name: this.name,
-          email: this.email,
-          zipcode: this.zipcode,
-          address: this.address,
-          telephone: this.telephone,
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.setLoginUser(response.data);
-          this.loginStatus();
-          alert("登録が完了しました");
-          this.$router.push("/top");
-        });
-    },
-  },
-};
+    register(){
+        this.name = this.name.replace("　","")
+        axios.post("/register", {
+        name: this.name,
+        email: this.email,
+        zipcode:this.zipcode,
+        address:this.address,
+        telephone:this.telephone
+    })
+    .then(response=>{
+        console.log(response.data)
+        this.setLoginUser(response.data);
+        this.loginStatus();
+        alert("登録が完了しました")
+        this.$router.push("/top")
+    })
+    }
+  }
+}
 </script>
 <style>
+
 .validate{
   color:red;
 }
-
 
 </style>

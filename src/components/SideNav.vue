@@ -1,5 +1,5 @@
 <template>
-  <div id="adminside">
+  <div id="adminside" v-if="this.$store.state.loginStatus">
     <div>
       <b-sidebar
         id="sidebar-backdrop"
@@ -45,24 +45,9 @@
                 >
               </v-list-item-content>
             </v-list-item>
-
-            <template>
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon> mdi mdi-bell-check-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title
-                    class="text-white"
-                    >このサイトについて</v-list-item-title
-                  >
-                </v-list-item-content>
-              </v-list-item>
-            </template>
-
           </v-list-item-group>
         </v-list>
-        <Logout></Logout>
+        <Logout :class="logoutClass" />
       </b-sidebar>
     </div>
   </div>
@@ -72,10 +57,11 @@
 import Logout from "@/components/Logout";
 export default {
   components:{
-        Logout
+    Logout
   },
   data() {
     return {
+      logoutClass: ["px-4", "my-5", "fixed-bottom"]
     }
   },
   mounted() {
@@ -83,8 +69,15 @@ export default {
   },
   methods: {
     toPage(path) {
-      this.$router.push(path);
+      this.$router.push(path).catch(err => {err});
     },
+  },
+  abjustLogout() {
+    if (window.innerHeight < 600) {
+      this.logoutClass = ["px-4", "my-5"];
+    } else {
+      this.logoutClass = ["px-4", "my-5", "fixed-bottom"];
+    }
   }
 };
 </script>

@@ -5,7 +5,7 @@
       <vue-loading 
         type="spiningDubbles"
         color="#333333"
-        :size="{ width: '150px', height: '150px' }"
+        :size="{ width: '100px', height: '100px' }"
         >
       </vue-loading>
     </div>
@@ -20,7 +20,6 @@ export default {
   components: {
     VueLoading,
   },
-
 }
 </script>
 

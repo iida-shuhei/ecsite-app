@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from "../store/index.js";
 import Login from "../views/Login.vue"
 import Top from '../views/Top.vue'
 import ItemDetail from '../views/ItemDetail.vue'
@@ -11,38 +12,66 @@ Vue.use(VueRouter)
 
   const routes = [
     {
-      path:'/',
+      path:'/login',
       name: 'Login',
       component: Login
-
-
     },
     {
       path:'/registerUser',
       name:'RegisterUser',
       component:RegisterUser
-
-
     },
   {
-    path: '/top',
+    path: '/',
     name: 'Top',
-    component: Top
+    component: Top,
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
+    beforeEnter(to, from, next) {
+      if (store.state.loginStatus) {
+        next();
+      } else {
+        next("/login");
+      }
+    },
   },
   {
-    path: '/itemDetail/itemId=:itemId',
+    path: '/itemDetail/:itemId?',
     name: 'ItemDetail',
-    component: ItemDetail
+    component: ItemDetail,
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
+    beforeEnter(to, from, next) {
+      if (store.state.loginStatus) {
+        next();
+      } else {
+        next("/login");
+      }
+    },
   },
   {
     path: '/cart',
     name: 'Cart',
-    component: Cart
+    component: Cart,
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
+    beforeEnter(to, from, next) {
+      if (store.state.loginStatus) {
+        next();
+      } else {
+        next("/login");
+      }
+    },
   },
   {
     path: '/purchaseForm',
     name: 'PurchaseForm',
-    component: PurchaseForm
+    component: PurchaseForm,
+    //ログインしていなかったら上記のパスに飛ぶことを許可しない
+    beforeEnter(to, from, next) {
+      if (store.state.loginStatus) {
+        next();
+      } else {
+        next("/login");
+      }
+    },
   },
 ]
 

@@ -1,20 +1,21 @@
 <template>
-  <div>
-    <Login></Login>
-    <Logout></Logout>
-  </div>
+  <b-container class="mt-5">
+    <b-row align-v="center" align-h="center">
+      <b-col lg="6">
+        <Login></Login>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
 import Login from "../components/Login.vue";
-import Logout from "../components/Logout.vue";
 export default {
   data() {
     return {};
   },
   components: {
     Login,
-    Logout,
   },
   
   

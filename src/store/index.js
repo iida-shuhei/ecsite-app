@@ -58,17 +58,17 @@ export default new Vuex.Store({
         priceL: ''
       }
     },
-    cart: [],
+    shoppingCart:false
   },
   mutations: {
     setLoginUser(state, user) {
       state.loginUser = user;
     },
-    loginStatus(state) {
-      state.loginStatus = true;
+    loginStatus(state,status) {
+      state.loginStatus = status;
     },
     deleteLoginUser(state) {
-      state.login_user = null;
+      state.loginUser = null;
     },
     setItemList(state, itemList) {
       state.itemList = itemList;
@@ -79,19 +79,11 @@ export default new Vuex.Store({
     changeLoginStatus(state){
       state.loginStatus = false;
     },
-    setCart(state, cart) {
-      state.cart.push({
-        name: cart.name,
-        itemId: cart.itemId,
-        quantity: cart.quantity,
-        size: cart.size,
-        toppingList: cart.toppingList,
-        imagePath: cart.imagePath,
-        totalPrice: cart.totalPrice,
-      })
-    },
     setEmail(state,email){
       state.loginUser.email = email
+    },
+    setShoppingCart(state,itemId) {
+      state.shoppingCart = itemId
     }
   },
   actions: {
@@ -108,8 +100,8 @@ export default new Vuex.Store({
     setLoginUser({ commit }, user) {
       commit("setLoginUser", user);
     },
-    loginStatus({ commit }) {
-      commit("loginStatus");
+    loginStatus({ commit }, status) {
+      commit("loginStatus",status);
     },
     setItemList({ commit }, itemList) {
       commit("setItemList", itemList);
@@ -120,17 +112,16 @@ export default new Vuex.Store({
     changeLoginStatus({ commit }) {
       commit("changeLoginStatus");
     },
-    setCart({commit},cart) {
-      commit("setCart", cart)
-    },
     setEmail({commit},email){
       commit("setEmail",email)
+    },
+    setShoppingCart({commit},itemId) {
+      commit("setShoppingCart",itemId)
     }
   },
   modules: {},
   getters:{
     userName: (state) => (state.loginUser ? state.loginUser.name : ""),
-    photoURL: (state) =>
-      state.firebaseUser ? state.firebaseUser.photoURL : "",
+    photoURL: (state) => state.firebaseUser ? state.firebaseUser.photoURL : "",
   }
 });

@@ -21,77 +21,27 @@
             {{ topping.topping.name }}
           </div>
         </template>
-        <template v-slot:item.actions="{ item }">
-          <v-fa
-            :icon="['fas', 'trash-alt']"
-            size="lg"
-            @click="deleteItem(item)"
-            color="#2075D2"
-            class="trash"
-          >
-          </v-fa>
-        </template>
-      </v-data-table><br>
+      </v-data-table>
       
-        <v-card
-          class="mx-auto price"
+        <v-card-text
+          class="price"
           max-width="344"
           raised
         >
+        <v-icon x-large>mdi mdi-cart-outline</v-icon>
         <v-list-item three-line>
           <v-list-item-content>
-            <v-list-item-title class="headline mb-1">
-              {{ "税込 : " + totalPrice.toLocaleString() + "円" }}
-            </v-list-item-title>
             <v-list-item-subtitle>
               {{ "税抜 : " + totalWithoutTax.toLocaleString() + "円" }}<br>
               {{ "消費税 : " + totalTax.toLocaleString() + "円" }}
             </v-list-item-subtitle>
-          </v-list-item-content>
-
-          <v-list-item-avatar
-            tile
-            size="80"
-          >
-          <v-icon x-large>mdi mdi-cart-outline</v-icon>
-          </v-list-item-avatar>
-        </v-list-item>
-
-        <v-card-actions>
-          <v-btn 
-          @click="toProcedure()"
-          color="red"
-          width="240"><span class="cart">ご購入手続きへ</span></v-btn>
-        </v-card-actions>
-      </v-card>
-    </div>
-
-    <div v-show="!this.orderItem.length" class="message">
-      <v-card
-          class="mx-auto message"
-          max-width="500"
-          raised
-        >
-        <v-list-item three-line>
-          <v-list-item-content>
             <v-list-item-title class="headline mb-1">
-              かごに商品が入っていません。
+              {{ "税込 : " + totalPrice.toLocaleString() + "円" }}
             </v-list-item-title>
-            <v-list-item-subtitle>
-              お買い物をお楽しみください。
-            </v-list-item-subtitle>
           </v-list-item-content>
-
-          <v-list-item-avatar
-            tile
-            size="80"
-          >
-          <v-icon x-large>mdi mdi-cart-outline</v-icon>
-          </v-list-item-avatar>
         </v-list-item>
-      </v-card>
+      </v-card-text>
     </div>
-
   </div>
 </template>
 
@@ -131,11 +81,6 @@ export default {
         {
           value: "subTotal",
           text: "合計",
-          sortable: true,
-        },
-        {
-          value: "actions",
-          text: "削除",
           sortable: true,
         },
       ],
@@ -192,21 +137,6 @@ export default {
         return totalWithoutTax + totalTax
     },
   },
-  methods : {
-    toProcedure() {
-      this.$router.push( 
-        { name : 'PurchaseForm' , params :  { totalPrice : this.totalPrice }
-      })
-    },
-    deleteItem(item) {
-      axios.post('/delete', {
-        itemId: item.id
-      })
-      var items = this.itemList
-      var index = items.indexOf(item)
-      items.splice(index,1)
-    },
-  },
 }
 </script>
 
@@ -230,6 +160,6 @@ export default {
     margin-top: 30px;
   }
   .price {
-    text-align: center;
+    text-align: right;
   }
 </style>

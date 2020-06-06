@@ -21,19 +21,16 @@
         <div>{{ item.description }}</div>
       </v-card-text>
 
-      <v-card-text>
-        <v-chip-group
-          active-class="deep-purple accent-4 white--text"
-          column
-          v-model="size"
-          >
+      <v-card-actions>
 
-          <v-chip value="M">{{ "[M]" + item.priceM.toLocaleString() + "円(税抜)" }}</v-chip>
+          <b-col>
+            <b-form-radio v-model="size" value="M">M {{ item.priceM.toLocaleString() + "円(税抜)" }}</b-form-radio>
+          </b-col>
+          <b-col>
+            <b-form-radio v-model="size" value="L">L {{ item.priceL.toLocaleString() + "円(税抜)" }}</b-form-radio>
+          </b-col>
 
-          <v-chip value="L">{{ "[L]" + item.priceL.toLocaleString() + "円(税抜)" }}</v-chip>
-
-        </v-chip-group>
-      </v-card-text>
+      </v-card-actions>
 
       <v-divider class="mx-4"></v-divider>
 
@@ -48,7 +45,7 @@
         <v-select
           v-model="selected"
           item-text="name"
-          item-value="id"
+          item-value="item"
           :items="item.toppingList"
           multiple
           return-object
@@ -90,16 +87,10 @@
       <v-card-actions>
         <v-btn
           color="red"
-          width="240"
+          width="480"
           @click="addItem()"
         >
         <span class="cart">商品をかごに追加</span>
-        </v-btn>
-        <v-btn
-          color="red"
-          width="240"
-        >
-        <span class="cart">ご購入手続きへ</span>
         </v-btn>
       </v-card-actions>
 
@@ -109,6 +100,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -118,12 +110,12 @@ export default {
       quantities: [1,2,3,4,5,6,7,8,9,10],
       size:"M",
       quantity:"1",
-      cart:[]
+      orderTopping: []
     }
   },
   created() {
     this.item = this.$store.state.itemList.filter(
-      (elm) => elm.id === this.$route.params.itemId);
+      (elm) => elm.id === JSON.parse(decodeURIComponent(this.$route.query.itemId)))
   },
   computed: {
     totalPrice: function() {
@@ -140,19 +132,26 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setCart']),
+    ...mapActions([
+      "setShoppingCart"
+    ]),
     addItem() {
-      this.$router.push('/cart')
-      this.setCart({
-          name: this.item[0].name,
-          itemId: this.item[0].id,
-          quantity: this.quantity,
-          size: this.size,
-          toppingList: this.selected,
-          imagePath: this.item[0].imagePath,
-          totalPrice: this.totalPrice,
+      var orderToppingId = []
+      for(var num in this.selected) {
+        orderToppingId.push(this.selected[num].id)
+      }
+      this.orderTopping = orderToppingId
+      axios.post('/add', {
+        itemId: this.item[0].id,
+        quantity: this.quantity,
+        size: this.size,
+        orderTopping: this.orderTopping,
+        subTotal: this.totalPrice
       })
-    }
+      this.setShoppingCart(this.item[0].id)
+      this.$router.push('/')
+      alert('カートに追加しました')
+    },
   }
 }
 </script>

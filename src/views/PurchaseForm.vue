@@ -1,18 +1,17 @@
 <template>
   <div>
-    <Cart></Cart>
+    <PurchaseItems></PurchaseItems>
     <PurchaseInputForm></PurchaseInputForm>
   </div>
 </template>
 
 <script>
 import PurchaseInputForm from '@/components/PurchaseInputForm.vue'
-import Cart from '@/components/Cart.vue'
-
+import PurchaseItems from '@/components/PurchaseItems.vue'
 export default {
   components: {
     PurchaseInputForm,
-    Cart,
+    PurchaseItems
   },
 }
 </script>
