@@ -142,7 +142,9 @@ export default {
     }
   },
   created() {
-    axios.get('/showShoppingCart')
+    axios.post('/showShoppingCart', {
+      userId:this.$store.state.loginUser.id
+    })
       .then((response) => {
         this.orderItem = response.data[0].orderItemList
 

@@ -116,6 +116,12 @@ export default {
   created() {
     this.item = this.$store.state.itemList.filter(
       (elm) => elm.id === JSON.parse(decodeURIComponent(this.$route.query.itemId)))
+    
+    this.$axios.post('/count', {
+      userId: this.$store.state.loginUser.id
+    }).then((res) => {
+      this.$store.dispatch('cartCount',res.data)
+    })
   },
   computed: {
     totalPrice: function() {
@@ -142,6 +148,7 @@ export default {
       }
       this.orderTopping = orderToppingId
       axios.post('/add', {
+        userId: this.$store.state.loginUser.id,
         itemId: this.item[0].id,
         quantity: this.quantity,
         size: this.size,

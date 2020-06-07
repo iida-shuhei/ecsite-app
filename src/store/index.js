@@ -58,7 +58,8 @@ export default new Vuex.Store({
         priceL: ''
       }
     },
-    shoppingCart:false
+    shoppingCart:false,
+    cartCount:0
   },
   mutations: {
     setLoginUser(state, user) {
@@ -84,6 +85,9 @@ export default new Vuex.Store({
     },
     setShoppingCart(state,itemId) {
       state.shoppingCart = itemId
+    },
+    cartCount(state,count) {
+      state.cartCount = count
     }
   },
   actions: {
@@ -117,6 +121,9 @@ export default new Vuex.Store({
     },
     setShoppingCart({commit},itemId) {
       commit("setShoppingCart",itemId)
+    },
+    cartCount({commit},count) {
+      commit("cartCount",count)
     }
   },
   modules: {},
