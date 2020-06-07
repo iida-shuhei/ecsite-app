@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import axios from 'axios'
 import firebase from "firebase/app";
 import { mapActions } from "vuex";
 import Loading from "@/components/Loading.vue";
@@ -39,7 +39,8 @@ data(){
       "setLoginUser", 
       "loginStatus",
       'deleteLoginUser',
-      'setFirebaseUser'
+      'setFirebaseUser',
+      'setPurchaseHistory'
     ]),
   },
   components:{
@@ -55,11 +56,14 @@ data(){
                 email: firebase.auth().currentUser.email,
               })
               .then((response) => {
+                
                 if (!(response.data.id)) {
                   this.$store.dispatch("setEmail",firebase.auth().currentUser.email)
                   this.$router.push("/registerUser");
                 } else if (response.data.id) {
                   this.setLoginUser(response.data);
+                  this.setPurchaseHistory(response.data.orderList)
+                  console.log(this.$store.state.purchaseHistory)
                   this.loginStatus(true);
                   this.$router.push("/");
                 }

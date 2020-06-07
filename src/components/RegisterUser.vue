@@ -119,7 +119,7 @@
           <button
             type="submit"
             class="btn btn-primary"
-            @click.prevent="register"
+            @click.prevent="register()"
             :disabled="ObserverProps.invalid || !ObserverProps.validated"
           >
             登録
@@ -181,7 +181,7 @@ export default{
     //ユーザー登録処理
     register(){
         this.name = this.name.replace("　","")
-        axios.post("/register", {
+        axios.post("/registerUserForm/register", {
         name: this.name,
         email: this.email,
         zipcode:this.zipcode,
@@ -219,7 +219,14 @@ export default{
   background:#EEEEEE;
 }
 .btn-container{
+  position:relative;
+  text-align:center; 
+  right:5%;
+}
+.btn.btn-primary{
   text-align: center;
+  margin: 0 auto;
+
 }
 .registerTitle{
   position:relative;
@@ -228,6 +235,14 @@ export default{
 }
 .form-container.container{
   margin:20px;
+  padding:20px;
+}
+.form-container{
+  margin:0 auto;
+}
+.form-container.container.form-group{
+  text-align: center;
+  position: relative;
 }
 
 
