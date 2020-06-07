@@ -19,7 +19,7 @@
                 <v-icon> mdi mdi-home</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title @click="toPage('/top')" class="text-white"
+                <v-list-item-title @click="toPage('/')" class="text-white"
                   >ホーム</v-list-item-title
                 >
               </v-list-item-content>
@@ -29,9 +29,12 @@
                 <v-icon> mdi mdi-cart-outline</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title class="text-white" @click="toPage('/cart')"
-                  >買い物かご</v-list-item-title
-                >
+                <v-list-item-title 
+                  class="text-white" 
+                  @click="toPage('/cart')"
+                  >買い物かご
+                </v-list-item-title>
+                <v-list-item-title>{{count}}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item>
@@ -61,7 +64,8 @@ export default {
   },
   data() {
     return {
-      logoutClass: ["px-4", "my-5", "fixed-bottom"]
+      logoutClass: ["px-4", "my-5", "fixed-bottom"],
+      count:0
     }
   },
   mounted() {
@@ -78,7 +82,7 @@ export default {
     } else {
       this.logoutClass = ["px-4", "my-5", "fixed-bottom"];
     }
-  }
+  },
 };
 </script>
 

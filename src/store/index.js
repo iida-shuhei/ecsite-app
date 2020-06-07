@@ -59,7 +59,11 @@ export default new Vuex.Store({
       }
     },
     shoppingCart:false,
+<<<<<<< HEAD
     purchaseHistory:[]
+=======
+    cartCount:0
+>>>>>>> sub2
   },
   mutations: {
     setLoginUser(state, user) {
@@ -87,8 +91,13 @@ export default new Vuex.Store({
     setShoppingCart(state,itemId) {
       state.shoppingCart = itemId
     },
+<<<<<<< HEAD
     setPurchaseHistory(state,orderList){
       state.purchaseHistory = orderList
+=======
+    cartCount(state,count) {
+      state.cartCount = count
+>>>>>>> sub2
     }
   },
   actions: {
@@ -126,6 +135,9 @@ export default new Vuex.Store({
     },
     setPurchaseHistory({commit},orderList){
       commit("setPurchaseHistory",orderList)
+    },
+    cartCount({commit},count) {
+      commit("cartCount",count)
     }
   },
   modules: {},
