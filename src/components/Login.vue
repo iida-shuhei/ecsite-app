@@ -11,10 +11,10 @@
           @click="login"
           style="text-transform: none;height:42px"
         >
-        <div class="my-2">
-          <img class="pb-1" src="@/assets/google_icon.png" />
-          <span style="color:#6a6a6a">Googleアカウントでログイン</span>
-        </div>
+          <div class="my-2">
+            <img class="pb-1" src="@/assets/google_icon.png" />
+            <span style="color:#6a6a6a">Googleアカウントでログイン</span>
+          </div>
         </v-btn>
       </b-card-text>
     </b-card>
@@ -22,61 +22,76 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 import firebase from "firebase/app";
 import { mapActions } from "vuex";
 import Loading from "@/components/Loading.vue";
 
 export default {
-data(){
-  return{
-    loading:true,
-  }
-},
+  data() {
+    return {
+      loading: true,
+    };
+  },
   methods: {
     ...mapActions([
-      "login", 
-      "setLoginUser", 
+      "login",
+      "setLoginUser",
       "loginStatus",
-      'deleteLoginUser',
-      'setFirebaseUser',
-      'setPurchaseHistory'
+      "deleteLoginUser",
+      "setFirebaseUser",
+      "setPurchaseHistory",
     ]),
   },
-  components:{
-    Loading
+  components: {
+    Loading,
   },
   created() {
     firebase.auth().onAuthStateChanged((user) => {
       this.loading = false;
-        if (user) {
-          this.setFirebaseUser(user);
-            axios
-              .post("/login/findAllByMail", {
-                email: firebase.auth().currentUser.email,
-              })
-              .then((response) => {
-                
-                if (!(response.data.id)) {
-                  this.$store.dispatch("setEmail",firebase.auth().currentUser.email)
-                  this.$router.push("/registerUser");
-                } else if (response.data.id) {
-                  this.setLoginUser(response.data);
-                  this.setPurchaseHistory(response.data.orderList)
-                  console.log(this.$store.state.purchaseHistory)
-                  this.loginStatus(true);
-                  this.$router.push("/");
-                }
-              });
-            this.loading = true
-          } else {
-            firebase.auth().signOut();
-            this.deleteLoginUser();
-        }
-      })
-    }
-}
+      if (user) {
+        this.setFirebaseUser(user);
+
+        axios
+          .post("/login/findAllByMail", {
+            email: firebase.auth().currentUser.email,
+          })
+          .then((response) => {
+            if (!response.data.id) {
+              this.$store.dispatch(
+                "setEmail",
+                firebase.auth().currentUser.email
+              );
+              this.$router.push("/registerUser");
+            } else if (response.data.id) {
+              this.setLoginUser(response.data);
+              // console.log(this.$store.state.loginUser);
+              
+              // console.log(this.$store.state.purchaseHistory)
+              axios
+                .post("/purchaseHistory", {
+                  userId: this.$store.state.loginUser.id,
+                })
+                .then((response) => {
+                  this.setPurchaseHistory(response.data);
+                // console.log(response.data)
+                console.log(this.$store.state.purchaseHistory)
+                });
+              this.loginStatus(true);
+              this.$router.push("/");
+            }
+          });
+
+        
+
+        this.loading = true;
+      } else {
+        firebase.auth().signOut();
+        this.deleteLoginUser();
+      }
+    });
+  },
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

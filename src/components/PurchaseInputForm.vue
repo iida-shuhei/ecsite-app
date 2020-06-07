@@ -263,9 +263,9 @@ export default {
           userId: this.$store.state.loginUser.id,
         })
         .then((response) => {
-          console.log(response.data)
           this.$store.dispatch("setPurchaseHistory", response.data);
-          console.log(this.$store.state.purchaseHistory);
+          console.log(this.$store.state.purchaseHistory)
+          // console.log(this.$store.state.purchaseHistory);
         });
     },
 

@@ -63,6 +63,7 @@ export default new Vuex.Store({
   },
   mutations: {
     setLoginUser(state, user) {
+      console.log("kiteru?2")
       state.loginUser = user;
     },
     loginStatus(state,status) {
@@ -102,6 +103,7 @@ export default new Vuex.Store({
       commit("deleteLoginUser");
     },
     setLoginUser({ commit }, user) {
+      console.log("kiteru?")
       commit("setLoginUser", user);
     },
     loginStatus({ commit }, status) {

@@ -189,7 +189,7 @@ export default{
         telephone:this.telephone
     })
     .then(response=>{
-        console.log(response.data)
+        // console.log(response.data)
         this.setLoginUser(response.data);
         this.loginStatus();
         alert("登録が完了しました")
